@@ -1,0 +1,13 @@
+<div class="section-label">
+    {{'indicators' | translate}}
+</div>
+<table class="dhis2-list-table-striped">
+    <tr ng-repeat="pid in allProgramRules.programIndicators.rules">
+        <td>
+            {{pid.name}}
+        </td>
+        <td>
+            <input type="text" class="form-control" value={{formatNumberResult(ruleeffects[currentEvent.event][pid.id].data)}} ng-disabled="true">
+        </td>
+    </tr>
+</table>

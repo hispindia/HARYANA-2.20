@@ -1,0 +1,117 @@
+<script src= "scripts/validations.js"></script>
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportConfigurationPage()">{{'report_configuration'| translate}}</a></li>
+        </ul>
+
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showProgramManagementScreen()">{{'program_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportsScreen()">{{'report_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showReportGenerationScreen()">{{'report_generation'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showDataStatusScreen()">{{'data_status'| translate}}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="mainPage">
+    <h2>&nbsp;&nbsp;&nbsp;{{'set_configuration'| translate}}</h2>
+    <div class="vertical-spacing col-md-8" >
+        <form name="outerForm" novalidate>
+            <table class="dhis2-list-table-striped dhis2-table-hover">
+                <tr ng-repeat="parameter in configurationParameters.parameters" ng-switch="parameter.valueType">
+
+                    <td>
+                        {{parameter.key | translate}}
+                    </td>
+
+                    <td ng-switch-when="userGroup">
+                        <select class="form-control" id ="userGroup" ng-required="true"  ng-model="configurationParameters.parameters[$index].value" ng-options="userGroup.id as userGroup.name for userGroup in userGroups">
+                            <option value="">{{'please_select_user_group'| translate}}</option>
+                        </select>
+
+                    </td>
+
+                    <td ng-switch-when="reportLogo">
+                        <select class="form-control" id ="reportLogo" ng-required="true" ng-model="configurationParameters.parameters[$index].value" ng-options="document.id as document.name for document in documents">
+                            <option value="">{{'please_select_report_logo'| translate}}</option>
+                        </select>
+                    </td>
+
+                    <td ng-switch-when="dataSetStatusReport">
+                        <select class="form-control" id ="dataSetStatusReport" ng-required="true" ng-model="configurationParameters.parameters[$index].value" ng-options="report.id as report.name for report in reportList">
+                            <option value="">{{'please_select_ds_report'| translate}}</option>
+                        </select>
+                    </td>
+                </tr>
+            </table><br>
+            <div class="vertical-spacing" >
+                <button type="button" class="btn btn-primary" ng-click="saveReportConfigurationAndGo();">{{'save'| translate}}</button>
+                <!--<button type="button" class="btn btn-default small-horizonal-spacing" onclick="javascript:history.go(-1);">{{'back'| translate}}</button>-->
+                <!--<button type="button" class="btn btn-warning" ng-click="resetConfiguration();">{{'reset'| translate}}</button>-->
+                <!--<button class="btn btn-danger"  ng-click="cancel()">Cancel</button>-->
+            </div>
+        </form>
+
+        <div ng-show="showSuccess" class="alert alert-success">{{'success'| translate}}</div>
+
+    </div>
+
+</div>
+
+
+
+<!--
+
+    <h2>&nbsp;&nbsp;&nbsp;{{'set_configuration'| translate}}</h2>
+    <form name="form">
+        <div class="vertical-spacing col-md-8" >
+
+            <table class="dhis2-list-table-striped dhis2-table-hover">
+                <tr>
+                    <td>{{'user_group_for_report' | translate}}</td>
+                    <td>
+                        <input type="text"
+                               name="foo"
+                               class="form-control typeahead"
+                               ng-model="currentReport.id"
+                               placeholder="{{'please_select_user_group' | translate}}"
+                               typeahead="userGroup.id as userGroup.name for userGroup in userGroups | filter:$viewValue | limitTo:20"
+                               typeahead-focus-first="false"
+                               typeahead-editable=false
+                               ng-disabled="editingDisabled" ng-required="true"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{'report_logo' | translate}}</td>
+                    <td>
+                        <input type="text"
+                               name="foo"
+                               class="form-control typeahead"
+                               ng-model="currentReport.section"
+                               placeholder="{{'please_select_report_logo' | translate}}"
+                               typeahead="document.id as document.name for document in documents | filter:$viewValue | limitTo:20"
+                               typeahead-focus-first="false"
+                               typeahead-editable=false
+                               ng-disabled="editingDisabled" ng-required="true"/>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="footer">
+                <button class="btn btn-primary" ng-click="save()">Save</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+-->

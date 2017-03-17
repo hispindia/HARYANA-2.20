@@ -1,0 +1,52 @@
+<script src="javascripts/oauth2Clients.js"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    tableSorter('listTable');
+
+    dhis2.contextmenu.makeContextMenu({
+      menuId: 'contextMenu',
+      menuItemActiveClass: 'contextMenuItemActive'
+    });
+  });
+
+  var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "delete_oauth2_client" ) , "'" )';
+</script>
+
+<h3>$i18n.getString( "oauth2_client_management" )</h3>
+
+<div id="contextMenu" class="contextMenu" style="width: 240px;">
+  <ul id="contextMenuItems" class="contextMenuItems">
+    <li><a data-target-fn="updateO2Client"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "edit" )</a></li>
+    <li><a data-target-fn="deleteO2Client"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;$i18n.getString( "remove" )</a></li>
+  </ul>
+</div>
+
+<table class="mainPageTable">
+  <tr>
+    <td style="text-align:right">
+      <input type="button" value="$i18n.getString( 'add_new' )" onclick="window.location.href='getOAuth2Client.action'" style="width:80px"/>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align:top">
+      <table class="listTable" id="listTable">
+        <col/>
+        <thead>
+        <tr>
+          <th>$i18n.getString( "name" )</th>
+        </tr>
+        </thead>
+        <tbody id="list">
+          #foreach( $client in $clients )
+          <tr id="tr${client.id}" data-id="$!client.id" data-uid="$!client.uid" data-type="OAuth2Client" data-name="$encoder.htmlEncode( $!client.displayName )">
+            <td>$encoder.htmlEncode( $!client.displayName )</td>
+          </tr>
+          #end
+        </tbody>
+
+      </table>
+      <p></p>
+
+    </td>
+  </tr>
+</table>

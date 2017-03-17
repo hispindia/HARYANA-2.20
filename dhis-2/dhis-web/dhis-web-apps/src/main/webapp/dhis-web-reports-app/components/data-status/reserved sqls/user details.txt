@@ -1,0 +1,41 @@
+SELECT
+	pd.periodid,
+	pd.startdate,
+	rs.storedby,
+	MAX (rs.lastupdated) AS latestdate
+FROM
+	(
+		SELECT
+			*
+		FROM
+			period
+		WHERE
+			periodtypeid IN (
+				SELECT
+					periodtypeid
+				FROM
+					dataset
+				WHERE
+					uid = '${dataSetUid}'
+			)
+	) pd
+LEFT JOIN (
+	SELECT
+		dv.storedby,
+		dv.periodid,
+		dv.lastupdated
+	FROM
+		datavalue dv
+	INNER JOIN datasetmembers dm ON dv.dataelementid = dm.dataelementid
+	INNER JOIN dataset ds ON ds.datasetid = dm.datasetid 
+	INNER JOIN organisationunit o ON o.organisationunitid = dv.sourceid
+	WHERE
+		ds.uid = '${dataSetUid}'
+	AND o.uid = '${orgUnitUid}'
+) rs ON pd.periodid = rs.periodid
+GROUP BY
+	pd.periodid,
+	pd.startdate,
+	rs.storedby
+ORDER BY
+	pd.startdate ASC

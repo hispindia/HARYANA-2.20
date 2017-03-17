@@ -1,0 +1,95 @@
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportConfigurationPage()">{{'report_configuration'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showProgramManagementScreen()">{{'program_management'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportsScreen()">{{'report_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showReportGenerationScreen()">{{'report_generation'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showDataStatusScreen()">{{'data_status'| translate}}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="mainPage">
+    <form name="form">
+    <h2>&nbsp;&nbsp;&nbsp;{{'edit_report'| translate}}</h2>
+
+    <div class="vertical-spacing col-md-10" >
+
+    <table class="dhis2-list-table-striped dhis2-table-hover">
+        <tr>
+            <td>{{'select_report' | translate}}</td>
+            <td>
+                <input type="text"
+                       name="foo"
+                       class="form-control typeahead"
+                       ng-model="currentReport.id"
+                       placeholder="{{'please_select_report' | translate}}"
+                       typeahead="report.id as report.name for report in reportList| filter:$viewValue | limitTo:20"
+                       typeahead-focus-first="false"
+                       typeahead-editable=false
+                       ng-disabled="editingDisabled" ng-required="true" ng-readonly="true"/>
+            </td>
+        </tr>
+      <tr>
+            <td>{{'select_section' | translate}}</td>
+            <td>
+                <input type="text"
+                       name="foo"
+                       class="form-control typeahead"
+                       ng-model="currentReport.section"
+                       placeholder="{{'please_select_section' | translate}}"
+                       typeahead="section.uid as section.name for section in sectionList | filter:$viewValue | limitTo:20"
+                       typeahead-focus-first="false"
+                       typeahead-editable=false
+                       ng-disabled="editingDisabled" ng-required="true"/>
+            </td>
+    </tr>
+        <tr><td>{{'select_orgUnit_group' | translate}}</td>
+            <td>  <input type="text"
+                         name="foo"
+                         class="form-control typeahead"
+                         ng-model="currentReport.orgUnitGroup"
+                         placeholder="{{'please_select_orgunit_group' | translate}}"
+                         typeahead="organisationUnitGroup.id as organisationUnitGroup.name for organisationUnitGroup in organisationUnitGroups | filter:$viewValue | limitTo:20"
+                         typeahead-focus-first="false"
+                         typeahead-editable=false
+                         ng-disabled="editingDisabled" ng-required="true"/>
+            </td>
+        </tr>
+        <tr><td>{{'select_periodType' | translate}}</td>
+            <td>  <input type="text"
+                         name="foo"
+                         class="form-control typeahead"
+                         ng-model="currentReport.periodType"
+                         placeholder="{{'please_select_periodType' | translate}}"
+                         typeahead="periodType.id as periodType.name for periodType in periodTypes | filter:$viewValue | limitTo:20"
+                         typeahead-focus-first="false"
+                         typeahead-editable=false
+                         ng-disabled="editingDisabled" ng-required="true" />
+            </td>
+        </tr>
+
+    </table>
+
+        <div ng-show="showSuccess" class="alert alert-success">{{'success'| translate}}</div>
+
+        <div class="footer">
+            <button class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+    </form>
+
+</div>

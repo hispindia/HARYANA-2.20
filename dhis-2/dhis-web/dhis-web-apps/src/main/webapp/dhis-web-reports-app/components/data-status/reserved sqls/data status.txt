@@ -1,0 +1,27 @@
+SELECT
+	P .periodid,
+	P .startdate,
+	COUNT (VALUE) entered,
+	(COUNT(VALUE) * 100) / ${compulsoryDECount} comp
+FROM
+	datavalue dv
+INNER JOIN datasetmembers dsm ON dv.dataelementid = dsm.dataelementid
+INNER JOIN dataset ds ON ds.datasetid = dsm.datasetid 
+INNER JOIN organisationunit ou ON dv.sourceid = ou.organisationunitid
+INNER JOIN period P ON dv.periodid = P .periodid
+WHERE
+	ds.uid = '${dataSetUid}'
+AND dv.periodid IN (
+	SELECT
+		periodid
+	FROM
+		period
+	WHERE
+		periodtypeid IN ( SELECT periodtypeid from dataset where datasetid = '${dataSetUid}' )
+)
+AND ou.uid = '${orgUnitUid}'
+GROUP BY
+	P .periodid,
+	P .startdate
+ORDER BY
+	P .startdate ASC

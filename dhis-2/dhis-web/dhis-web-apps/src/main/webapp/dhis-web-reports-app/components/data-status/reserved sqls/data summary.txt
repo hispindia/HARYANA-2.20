@@ -1,0 +1,30 @@
+SELECT
+	P .periodid,
+	P .startdate,
+	COUNT (VALUE) entered,
+	(COUNT(VALUE) * 100) / 111 comp
+FROM
+	datavalue dv
+INNER JOIN datasetmembers dsm ON dv.dataelementid = dsm.dataelementid
+INNER JOIN organisationunit ou ON dv.sourceid = ou.organisationunitid
+INNER JOIN period P ON dv.periodid = P .periodid
+INNER JOIN dataset ds ON dsm.datasetid = ds.datasetid
+WHERE
+	(dv. VALUE) != '0'
+AND (dv. VALUE) != ''
+AND ds.datasetid = 71
+AND dv.periodid IN (
+	SELECT
+		periodid
+	FROM
+		period
+	WHERE
+		periodtypeid IN ( select periodtypeid from dataset where datasetid = 71 )
+	AND startdate >= '12/8/2014'
+	AND enddate <= '12/8/2015'
+)
+GROUP BY
+	P .periodid,
+	P .startdate
+ORDER BY
+	P .startdate ASC

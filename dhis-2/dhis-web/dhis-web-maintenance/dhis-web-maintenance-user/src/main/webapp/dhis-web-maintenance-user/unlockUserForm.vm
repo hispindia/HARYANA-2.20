@@ -1,0 +1,116 @@
+<h3>Unlock Users</h3>
+<style>
+	#overlay 
+	{
+		z-index:19998;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:0;
+		width:100%;
+		background:#000;
+		opacity:0.45;
+		-moz-opacity:0.45;
+		filter:alpha(opacity=45);
+		visibility:hidden;
+	}
+
+	#overlayImg{ width: 50px; height: 50px; z-index: 9999; position: absolute; left:50%}
+</style>
+
+<script>
+	function formValidationsForUnlockUser()
+	{
+	
+		 var selectedLockedUsersSize = document.unlockUsersForm.selectedLockedUsers.options.length;
+		 
+		 alert( " No of Selected User(s) " + selectedLockedUsersSize );	
+		 
+		 if(  selectedLockedUsersSize <= 0 ) 
+		 {
+	        alert( "Please Select User(s)" );
+	        return false;
+		 }
+		  
+		 if( selectedTablesSize > 0 )
+		 {
+			for( k=0;k<document.unlockUsersForm.selectedLockedUsers.options.length;k++ )
+    		{
+    			document.unlockUsersForm.selectedLockedUsers.options[k].selected = true;
+        	} 
+		 }
+		 showOverlay()
+  		 return true;
+	} 
+
+</script>
+
+<script>
+    
+	function showOverlay() 
+	{
+		var o = document.getElementById('overlay');
+		o.style.visibility = 'visible';
+		jQuery("#overlay").css({
+			"position":"fixed",
+            "top":0+"px",
+            "left":0+"px",
+			"height": jQuery(document).height(),
+			"width": jQuery(document).width()
+		});
+		jQuery("#overlayImg").css({
+			"top":jQuery(window).height()/2
+		});
+	}
+	
+	function hideOverlay() 
+	{
+		var o = document.getElementById('overlay');
+		o.style.visibility = 'hidden';
+	}
+
+</script>
+
+	
+<form id="unlockUsersForm" name="unlockUsersForm" action="unlockUsers.action" method="POST" onsubmit="return formValidationsForUnlockUser()">
+	<table>
+		<tr>
+			<td valign="top">
+				<table valign="top">
+
+					<tr><td>&nbsp;</td></tr>
+					<tr><th>Available Locked Users</th><td></td><th>Selected Locked Users</th></tr>
+					<tr>	
+						<td>	
+							<select id="availableLockedUsers" name="availableLockedUsers" multiple="multiple" style="min-width:325px;height:11.25em" ondblclick="moveSelectedById( this.id, 'selectedLockedUsers' )">
+								#foreach( $lockdUser in $lockdUsers )
+    								<option value="$lockdUser.getId()" title="$lockdUser.getUser().getName()">$lockdUser.getUser().getName()</option>
+	    						#end
+							</select>
+						</td>
+						<td style="text-align:center">			
+							<input type="button" value="&gt;" title="$i18n.getString('move_selected')" style="width:50px" onclick="moveSelectedById( 'availableLockedUsers', 'selectedLockedUsers' )" /><br/>
+							<input type="button" value="&lt;" title="$i18n.getString('remove_selected')" style="width:50px" onclick="moveSelectedById( 'selectedLockedUsers', 'availableLockedUsers' )" /><br/>
+							<input type="button" value="&gt;&gt;" title="$i18n.getString('move_all')" style="width:50px" onclick="moveAllById( 'availableLockedUsers', 'selectedLockedUsers' )"/><br/>
+							<input type="button" value="&lt;&lt;" title="$i18n.getString('remove_all')" style="width:50px" onclick="moveAllById( 'selectedLockedUsers', 'availableLockedUsers' )"/>			
+						</td>	
+						<td>
+							<select id="selectedLockedUsers" name="selectedLockedUsers" size="2" multiple="multiple" style="min-width:325px;height:11.25em" ondblclick="moveSelectedById( this.id, 'availableLockedUsers' )"></select>
+						</td>
+					</tr>
+					<tr><td><h4><strong>No of Available Locked User :&nbsp;$lockdUsers.size()</strong></h4></td></tr>
+					<tr>
+						<td>
+							<input type="submit" id="unlockUsers" name="unlockUsers" value="Unlock" style="width:10em"  />&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" value="$i18n.getString( 'cancel' )" onclick="dhis2.commons.redirectCurrentPage( 'index.action' )" style="width:10em"/>
+				   		</td>
+			  		 </tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+<div id="overlay">
+	<div id="overlayImg"><img  width="50" height="50" src="images/ajax-loader.gif" /></div>
+</div>
+

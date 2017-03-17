@@ -1,0 +1,170 @@
+
+<script src= "scripts/validations.js"></script>
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportConfigurationPage()">{{'report_configuration'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showProgramManagementScreen()">{{'program_management'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportsScreen()">{{'report_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showReportGenerationScreen()">{{'report_generation'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showDataStatusScreen()">{{'data_status'| translate}}</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="page" id="mainPage">
+    <h1>{{'program_management'| translate}}</h1>
+
+    <div class="row">
+        <div class="col-sm-12" align="right">
+            <button type="button" class="btn btn-primary" ng-click="addSectionForm();" title="Add New Section">{{'add_new_section'| translate}}</button>
+        </div>
+    </div>
+    <!--
+    <div class="col-sm-12" align="left">
+        <h1>{{'section_list'| translate}}</h1>
+    </div>
+    -->
+    <hr />
+
+    <div>
+        <table class="dhis2-list-table-striped dhis2-table-hover">
+            <thead >
+            <th>{{'uid'| translate}}</th>
+            <th>{{'name'| translate}}</th>
+            <th>{{'user_group'| translate}}</th>
+            <th>{{'operation'| translate}}</th>
+            </thead>
+            <tr ng-repeat="section in allSections" >
+                <td>{{section.uid}}</td>
+                <td>{{section.name}}</td>
+                <td>{{userGroupsMap[section.userGroupUid].name}}</td>
+                <td>
+                    <a  title="Edit {{section.name}}" ng-click="editSection(section.uid);"><img src="images/edit.png" alt="Edit"/></a>
+                    <a  title="Delete {{section.name}}" ng-click="deleteSection(section.uid,section.name);" ><img src="images/deleteRed.png" alt="Delete"/></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- Add section modal start -->
+
+<div class="modal fade bs-example-modal-lg" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add New Section</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning alert-dismissible" role="alert" id="alertBox">
+                    <button type="button" class="close" onclick="hideAlert()"><span aria-hidden="true">&times;</span></button>
+                    <div id="alertMsg"> {{alertMsg}}</div>
+                </div>
+                <div class="vertical-spacing col-md-12" >
+                    <form class="form-horizontal">
+                        <table class="dhis2-list-table-striped dhis2-table-hover">
+                            <tr>
+                                <td>
+                                    {{'name' | translate}}
+                                </td>
+                                <td>
+                                    <input  class="form-control" ng-model="currentSection.name" type="text" id="name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{'user_group' | translate}}
+                                </td>
+                                <td>
+                                    <select class="form-control" id ="userGroupUid" ng-model="currentSection.userGroupUid"
+                                            ng-options="userGroup.id as userGroup.name for userGroup in userGroups">
+                                        <option value="">{{'please_select'| translate}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <!-- Button -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">{{'cancel'| translate}}</button>
+                            <button type="button"  data-ng-click="addSection()" class="btn btn-primary">{{'save'| translate}}</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Add section modal End -->
+
+<!-- Edit section modal start -->
+
+<div class="modal fade bs-example-modal-lg" id="editSectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myEditModalLabel">Edit New Section</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning alert-dismissible" role="alert" id="alertBox">
+                    <button type="button" class="close" onclick="hideAlert()"><span aria-hidden="true">&times;</span></button>
+                    <div id="editAlertMsg"> {{editAlertMsg}}</div>
+                </div>
+                <div class="vertical-spacing col-md-12" >
+                    <form class="form-horizontal">
+                        <table class="dhis2-list-table-striped dhis2-table-hover">
+                            <input type="hidden" id="updateSectionUid" data-ng-model="editCurrentSection.uid" />
+                            <tr>
+                                <td>
+                                    {{'name' | translate}}
+                                </td>
+                                <td>
+                                    <input  class="form-control" ng-model="editCurrentSection.name" type="text" id="eName"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{'user_group' | translate}}
+                                </td>
+                                <td>
+                                    <select class="form-control" id ="eUserGroupUid" ng-model="editCurrentSection.userGroupUid"
+                                            ng-options="userGroup.id as userGroup.name for userGroup in userGroups">
+                                        <option value="">{{'please_select'| translate}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <!-- Button -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">{{'cancel'| translate}}</button>
+                            <button type="button"  data-ng-click="updateSection()" class="btn btn-primary">{{'save'| translate}}</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Edit section modal End -->

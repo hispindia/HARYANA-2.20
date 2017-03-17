@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.hisp.dhis</groupId>
+		<artifactId>dhis</artifactId>
+		<version>2.20</version>
+		<relativePath>.</relativePath>		
+	</parent>
+
+	<artifactId>dhis-full</artifactId>
+	<packaging>pom</packaging>
+	<name>DHIS 2</name>
+
+	<modules>
+		<module>dhis-api</module>
+		<module>dhis-services</module>
+		<module>dhis-support</module>
+		<!-- local/in api and sevices -->
+		<module>../local/in/dhis-in-api</module>
+		
+		<module>../local/in/dhis-in-services/dhis-in-service-configuration</module>
+		<module>../local/in/dhis-in-services/dhis-in-service-reports</module>
+		<module>../local/in/dhis-in-services/dhis-service-aggregationengine</module>
+		<module>../local/in/dhis-in-services/dhis-in-service-linelisting</module> 
+		<module>../local/in/dhis-in-services/dhis-in-service-survey</module>
+		<module>../local/in/dhis-in-services/dhis-in-service-dbmanager</module>
+		<module>../local/in/dhis-in-services/dhis-in-service-dataentrystatus</module>
+		<module>../local/in/dhis-in-services/dhis-in-service-lookup</module>
+		
+		<!-- local/in web- module -->
+		
+		<module>../local/in/dhis-web-maintenance-in</module>
+		<module>../local/in/dhis-web-reports-national</module>
+		<module>../local/in/dhis-web-dashboard</module>
+		<module>../local/in/dhis-web-dataentry-linelisting</module>
+		<module>../local/in/dhis-web-excelimport</module>
+		
+		<!-- local/in end -->
+		<module>dhis-web</module>
+	</modules>
+
+</project>
+

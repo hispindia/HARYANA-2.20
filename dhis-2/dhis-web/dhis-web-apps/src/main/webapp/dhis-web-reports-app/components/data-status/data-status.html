@@ -1,0 +1,242 @@
+<script src="../dhis-web-commons/ouwt/ouwt.js"></script>
+
+<script type ="text/javascript">
+
+</script>
+
+<style>
+
+td {
+  vertical-align: middle;
+}
+
+</style>
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportConfigurationPage()">{{'report_configuration'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showProgramManagementScreen()">{{'program_management'| translate}}</a></li>
+           <!-- <li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li> -->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportsScreen()">{{'report_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showReportGenerationScreen()">{{'report_generation'| translate}}</a></li>
+        </ul>
+
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showDataStatusScreen()">{{'data_status'| translate}}</a></li>
+        </ul>
+    </div>
+    <div id="orgUnitTree">
+        <ul>
+        </ul>
+    </div>
+</div>
+
+<div class="page" id="mainPage">
+
+    <div class="vertical-spacing col-md-10" align="center" style="background-color:lavender;align:center;" >
+
+        <h1 style="color:#0B2161; font-size:250%;font-family:arial;"><strong>{{'data_status_report'| translate}}</strong></h1><br /><br /><br /><br />
+
+        <table class="table">
+            <tr>
+                <td style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'select_orgUnit' | translate}}</strong></h3></td>
+                <td ><!--{{currentSelection.orgUnit}}-->
+                    <div class="col-md-5">
+                         <input  class="form-control" ng-model="currentSelection.orgUnitName" type="text" ng-readonly="true"/>
+                         <input class="form-control" type="hidden" ng-model="currentSelection.orgUnit"/>
+                         <input class="form-control" type="hidden" ng-model="currentSelection.dataStatusReport"/>
+                    </div>
+                    <div class="col-md-3">
+                        <input id="includeZero" type="checkbox" ng-model="currentSelection.includeZero" ng-checked="true">Include Zero
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="margin-base-vertical" style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'select_data_set' | translate}}</strong></h3></td>
+                <td >
+                    <div class="col-md-8">
+                        <select class="form-control margin-base-vertical input-small" style="width:100%" ng-required="true" ng-model="currentSelection.dataSet"
+                                ng-options="dataSet.id as dataSet.name for dataSet in dataSets" id ="dataSetId" ng-change = "showHideButtons()" >
+                                <option value="">{{'please_select'| translate}}</option>
+                        </select>
+                </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'select_start_period' | translate}}</strong></h3></td>
+                <td>
+                    <div class="col-md-4">
+                        <select class="form-control input-small" style="width:100%" ng-model="currentSelection.startPeriodMonth" ng-change = "showHideButtons()" placeholder="{{'please_select_month' | translate}}"
+                                ng-options="month.id as month.name for month in monthList">
+                                <option value="">{{'please_select'| translate}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control " style="width:100%" ng-model="currentSelection.startPeriodYear" ng-change = "showHideButtons()" placeholder="{{'please_select_year' | translate}}"
+                                ng-options="year as year for year in yearList">
+                                <option value="">{{'please_select'| translate}}</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'select_end_period' | translate}}</strong></h3></td>
+                <td>
+                    <div class="col-md-4">
+                        <select class="form-control input-small" style="width:100%" ng-model="currentSelection.endPeriodMonth" ng-change = "showHideButtons()" placeholder="{{'please_select_month' | translate}}"
+                                ng-options="month.id as month.name for month in monthList">
+                                <option value="">{{'please_select'| translate}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control " style="width:100%" ng-model="currentSelection.endPeriodYear" ng-change = "showHideButtons()" placeholder="{{'please_select_year' | translate}}"
+                                ng-options="year as year for year in yearList">
+                                <option value="">{{'please_select'| translate}}</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+		</table>
+	</div>
+	
+	<div class="vertical-spacing col-md-10" align="center" style="background-color:#fff;align:center;" >	
+		<button type="button" id="btn1" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		ng-click="showDataSummary()" >{{'btn_data_summary'| translate}}</button>
+		
+		<button type="button" id="btn2" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		ng-click="showDataStatus()">{{'btn_data_status'| translate}}</button>
+		
+		<button type="button" id="btn3" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		ng-click = "showDataStatusDEG()">{{'btn_data_status_DEG'| translate}}</button>
+		
+		<button type="button" id="btn4" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		ng-click="showUserDetails()">{{'btn_user_details'| translate}}</button>
+		
+		<button type="button" id="btn5" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		>{{'btn_validation_status'| translate}}</button>
+		
+		<button type="button" id="btn6" class="btn btn-primary btn-md margin-base-vertical"  style="width:30%; margin:5px;display:none"
+		ng-click="showComments()">{{'btn_comments'| translate}}</button>
+	</div>
+
+</div>
+
+<style>
+
+	#loading
+	{
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,0.5);
+		z-index:4500;
+		padding:0;
+		margin:0;
+		display:none;
+	}
+	
+	#resultModal
+	{
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,0.5);
+		z-index:4500;
+		padding:0;
+		margin:0;
+	}
+	
+	
+	#modal-header
+	{
+		position:fixed;
+		height:40px;
+		background : #ddd;
+		border-radius : 10px 10px 0 0;
+		text-align : center;
+		padding-top:10px;
+		z-index:5000;
+		top:20px;
+	}
+	#modal-body {
+		max-width:900;
+		overflow:auto;
+		position:fixed;
+		height:500px;
+		background : #fff;
+		padding-top:10px;
+		z-index:5000;
+		top:60px;
+	}
+	
+	#modal-footer
+	{
+		position:fixed;
+		height:55px;
+		background : #eee;
+		border-radius : 0 0 10px 10px;
+		text-align : right;
+		padding-top:10px;
+		z-index:5000;
+		top:560px;
+	}
+</style>
+
+	<div id="loading" style="display:none">
+		<image class="loadImage" src="images/loader.gif"/>
+	</div>
+			
+<!--- Models -- -->
+	<a id="dlink"  style="display:none;"></a>
+	
+	<div id="resultModal" style="display:none">    
+		<div id="modal-header" class="col-md-10 col-md-offset-1">
+		  <h4 class="modal-title" id="headTitle">Modal Header</h4>
+		</div>
+		
+		<div id="modal-body" class="col-md-10 col-md-offset-1">
+			<div id="coverLoad">
+				<image class="loadImage" src="images/loader.gif"/>
+			</div>
+			<div id="printContent">
+				<table class='table table-bordered table-hover' id="tableContent" style="width:95%; margin: 0 auto;margin-top:10px">
+				
+				</table>
+			</div>
+		</div>
+		
+		<div id="modal-footer"  class="col-md-10 col-md-offset-1">
+		  <button type="button" class="btn btn-success" id="dwnLoad" style="display:none">Download</button>
+		  <button type="button" class="btn btn-default" onclick="hideModel()">Close</button>
+		</div>
+	</div>
+  
+  <script>
+	$(document).ready(function(){
+		$("#dwnLoad").click(function(e) {
+			window.open('data:application/vnd.ms-excel,'+ encodeURIComponent($('#printContent').html()));
+			e.preventDefault();
+		});
+	});
+	
+	function hideModel()
+	{	
+		$("#modal-header").fadeOut();
+		$("#modal-body").delay(300).fadeOut();
+		$("#modal-footer").delay(600).fadeOut();
+		$("#resultModal").delay(900).fadeOut();
+	}
+  </script>

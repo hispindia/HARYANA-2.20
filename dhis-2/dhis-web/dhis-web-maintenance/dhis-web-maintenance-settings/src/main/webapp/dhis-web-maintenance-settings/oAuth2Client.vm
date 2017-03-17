@@ -1,0 +1,105 @@
+<style>
+  input[disabled] {
+    background-color : #ececec;
+  }
+
+  #clientForm > table {
+    padding-bottom : 10px;
+  }
+</style>
+<script src="javascripts/oauth2Clients.js"></script>
+<script>
+  $(function() {
+    #if( $id )
+      OAuth2Service.load("$id").done(function(data) {
+        OAuth2Service.fromJson(data);
+        $('input').removeAttr('disabled');
+      }).fail(function() {
+        // we should never really get here, but redirect back to oauth2 client list if id was invalid
+        location.href = "systemOAuth2Clients.action";
+      });
+    #else
+      OAuth2Service.getUuid().then(function(uuid) {
+        $('#clientSecret').val(uuid);
+      })
+    #end
+
+    $('#clientForm').submit(function(e) {
+      var o = OAuth2Service.toJson();
+      console.log(o);
+
+      OAuth2Service.save(o, "$!id").then(function() {
+        location.href = "systemOAuth2Clients.action";
+      });
+
+      e.preventDefault();
+    })
+
+    $('#addRedirectUri').on('click', function() {
+      var redirectUri = $('#redirectUri').val();
+
+      if( redirectUri && redirectUri.length > 0 ) {
+        $('<option/>').attr('value', redirectUri).text(redirectUri).appendTo('#redirectUris');
+      }
+    });
+
+    $('#removeRedirectUri').on('click', function() {
+      $('#redirectUris option:selected').remove();
+    });
+  });
+</script>
+
+#if( $id )
+<h3>$i18n.getString( "edit_oauth2_client" )</h3>
+#else
+<h3>$i18n.getString( "create_new_oauth2_client" )</h3>
+#end
+
+<form id="clientForm" class="inputForm">
+  <table>
+    <tr>
+      <th colspan="2">$i18n.getString( "details" )</th>
+    </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "name" )</label></td>
+      <td><input type="text" id="name" name="name" value="" #if($id)disabled#end></td>
+    </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "client_id" )</label></td>
+      <td><input type="text" id="clientId" name="clientId" value="" #if($id)disabled#end></td>
+    </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "client_secret" )</label></td>
+      <td><input type="text" id="clientSecret" name="clientSecret" value="" #if($id)disabled#end></td>
+    </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "grant_types" )</label></td>
+      <td>
+        <input type="checkbox" id="gtPassword" name="gtPassword"><label for="gtPassword">$i18n.getString( "password" )</label><br/>
+        <input type="checkbox" id="gtRefreshToken" name="gtRefreshToken"><label for="gtRefreshToken">$i18n.getString( "refresh_token" )</label><br/>
+        <input type="checkbox" id="gtAuthorizationCode" name="gtAuthorizationCode"><label for="gtAuthorizationCode">$i18n.getString( "authorization_code" )</label><br/>
+      </td>
+    </tr>
+    <tr>
+      <td><label for="name">$i18n.getString( "redirect_uris" )</label></td>
+      <td>
+        <input id="redirectUri" type="text" value="https://">
+        <button type="button" id="addRedirectUri" style="height: 22px;"><i class="fa fa-plus"></i> $i18n.getString( "add" )</button>
+        <button type="button" id="removeRedirectUri" style="height: 22px;"><i class="fa fa-minus"></i> $i18n.getString( "remove" )</button>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <select id="redirectUris" multiple></select>
+      </td>
+    </tr>
+  </table>
+
+  #if( $id )
+    <input id="submit" type="submit" value="$i18n.getString( 'save' )" style="width:10em"/>
+  #else
+    <input id="submit" type="submit" value="$i18n.getString( 'add' )" style="width:10em"/>
+  #end
+  <input type="button" value="$i18n.getString( 'cancel' )" onclick="dhis2.commons.redirectCurrentPage( 'systemOAuth2Clients.action' )" style="width:10em"/>
+</form>

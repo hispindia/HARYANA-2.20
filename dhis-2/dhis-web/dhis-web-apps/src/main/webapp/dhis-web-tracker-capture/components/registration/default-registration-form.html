@@ -1,0 +1,86 @@
+<h3 ng-if="widget !== 'PROFILE'">{{'profile'| translate}}</h3>
+<table class="dhis2-list-table-striped dhis2-table-hover">
+    <tr ng-repeat="attribute in attributes">
+        <td>
+            {{attribute.name}}<span ng-if="attribute.mandatory || attribute.unique" class="required">*</span>
+        </td>
+        <td>
+            <ng-form name="innerForm">
+                <span ng-if="attribute.optionSetValue">
+                    <ui-select  ng-model="selectedTei[attribute.id]"
+                                theme="select2" 
+                                ng-required="attribute.mandatory || attribute.unique"
+                                ng-disabled="editingDisabled"
+                                name="foo" 
+                                style="width:100%;">
+                        <ui-select-match allow-clear="true" style="width:100%; height:34px; line-height:1.0; padding: 2px 6px; margin-top:5px" placeholder="{{'select_or_search' | translate}}">{{$select.selected.name  || $select.selected}}</ui-select-match>
+                        <ui-select-choices  infinite-scroll="addMoreOptions()"
+                                            infinite-scroll-distance="2"
+                                            repeat="option.name as option in optionSets[attributesById[attribute.id].optionSet.id].options | filter: $select.search | limitTo:infiniteScroll.currentOptions">
+                          <span ng-bind-html="option.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </span>
+                <span ng-if="!attribute.optionSetValue" ng-switch="attribute.valueType">
+                    <span ng-switch-when="date">
+                        <input type="text" 
+                               placeholder="{{dhis2CalendarFormat.keyDateFormat}}" 
+                               name="foo" 
+                               class="form-control" 
+                               d2-date
+                               d2-date-validator
+                               max-date="attribute.allowFutureDate ? '' : 0"
+                               ng-model="selectedTei[attribute.id]"
+                               ng-disabled="editingDisabled" 
+                               ng-required="attribute.mandatory || attribute.unique"/>
+                    </span>
+                    <span ng-switch-when="trueOnly">
+                        <input type="checkbox" 
+                               name="foo" 
+                               class="form-control" 
+                               ng-model="selectedTei[attribute.id]" 
+                               ng-disabled="editingDisabled" 
+                               ng-required="attribute.mandatory || attribute.unique"/>
+                    </span>
+                    <span ng-switch-when="bool">
+                        <select name="foo" 
+                                ng-model="selectedTei[attribute.id]" 
+                                class="form-control" 
+                                ng-disabled="editingDisabled" 
+                                ng-required="attribute.mandatory || attribute.unique">
+                            <option value="">{{'please_select'| translate}}</option>                        
+                            <option value="false">{{'no'| translate}}</option>
+                            <option value="true">{{'yes'| translate}}</option>
+                        </select>
+                    </span>                    
+                    <span ng-switch-when="number">
+                        <input type="number" 
+                               name="foo" 
+                               class="form-control" 
+                               ng-model="selectedTei[attribute.id]" 
+                               ng-disabled="editingDisabled" 
+                               ng-required="attribute.mandatory || attribute.unique"/>
+                    </span>
+                    <span ng-switch-when="email">
+                        <input type="email" 
+                               name="foo" 
+                               class="form-control" 
+                               ng-model="selectedTei[attribute.id]" 
+                               ng-disabled="editingDisabled" 
+                               ng-required="attribute.mandatory || attribute.unique"/>
+                    </span>
+                    <span ng-switch-default>
+                        <input type="text" 
+                               name="foo" 
+                               class="form-control" 
+                               ng-model="selectedTei[attribute.id]" 
+                               ng-disabled="editingDisabled" 
+                               ng-required="attribute.mandatory || attribute.unique"/>                                    
+                    </span>
+                </span>                
+                <div ng-messages="innerForm.foo.$error" ng-if="interacted(innerForm.foo)" class="required" ng-messages-include="../dhis-web-commons/angular-forms/error-messages.html">                                         
+                </div>
+            </ng-form>            
+        </td>
+    </tr>           
+</table>

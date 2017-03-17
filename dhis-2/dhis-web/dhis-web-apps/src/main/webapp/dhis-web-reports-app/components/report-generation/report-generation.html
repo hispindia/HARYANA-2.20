@@ -1,0 +1,182 @@
+<script src="../dhis-web-commons/ouwt/ouwt.js"></script>
+
+<script type ="text/javascript">
+
+	var base = "";
+	//var reportLogoUID = "PQCXM23Qfab";
+    //var reportLogoUID = "BIeYINai3pa";
+
+    //alert($scope.reportLogoUid);
+
+    /*
+    var reportLogoUID = null;
+    if ( $scope.reportLogoUid != undefined) {
+
+        //alert($scope.reportLogoUid);
+        reportLogoUID = $scope.reportLogoUid;
+    }
+
+
+	jQuery( document ).ready( function() 
+	{			
+			
+		$( "#reportLogo" ).attr( "src", "../api/documents/"+ reportLogoUID +"/data" );
+		
+	});
+
+    */
+
+</script>
+
+<style>
+
+td {
+  vertical-align: middle;
+}
+
+</style>
+
+<div id="leftBar">
+    <div class="left-bar-menu" ng-controller="LeftBarMenuController">
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportConfigurationPage()">{{'report_configuration'| translate}}</a></li>
+            <!--<li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li>-->
+        </ul>
+
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showProgramManagementScreen()">{{'program_management'| translate}}</a></li>
+           <!-- <li><a href ng-click="showTemplateManagementScreen()">{{'template_manager'| translate}}</a></li> -->
+        </ul>
+        <ul class="nav nav-pills nav-stacked" ng-if="accessAuthority">
+            <li><a href ng-click="showReportsScreen()">{{'report_management'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showReportGenerationScreen()">{{'report_generation'| translate}}</a></li>
+        </ul>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href ng-click="showDataStatusScreen()">{{'data_status'| translate}}</a></li>
+        </ul>
+    </div>
+    <div id="orgUnitTree">
+        <ul>
+        </ul>
+    </div>
+</div>
+../api/documents/"+ reportLogoUID +"/data"
+{{reportLogoUid}}
+<div class="page" id="mainPage">
+
+    <div class="vertical-spacing col-md-10" align="center" style="background-color:lavender;align:center;" >
+
+    <img class="img-responsive" SRC="../api/documents/{{reportLogoUid}}/data" alt="" id="reportLogo" >
+    <h1 style="color:#0B2161; font-size:250%;font-family:arial;"><strong>{{'report_generation_page_header'| translate}}</strong></h1><br /><br /><br /><br />
+	
+
+    <table class="table">
+        <tr>
+            <td class="margin-base-vertical" style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'report_generation_select_section' | translate}}</strong></h3></td>
+            <td >
+<div class="col-md-6">
+                <select class="form-control margin-base-vertical input-small" style="width:100%" ng-required="true" ng-model="currentReport.section"
+                        ng-options="section.uid as section.name for section in sectionList">
+                </select>
+</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'report_generation_select_report' | translate}}</strong></h3></td>
+            <td >
+<div class="col-md-6">
+
+                <select class="form-control margin-base-vertical input-small" style="width:100%" ng-required="true" ng-model="currentReport.id"
+                        ng-options="report.id as report.name for report in reportSettings | filterOnSection:currentReport.section">
+                </select>
+
+                <!--
+                <select class="form-control margin-base-vertical input-small" style="width:100%" ng-model="currentReport.id"
+                        ng-options="report.id as report.name for report in reportSettings">
+                </select>
+                -->
+</div>
+            </td>
+        </tr>
+        <tr ng-if="currentReport.id">
+            <td style="vertical-align: middle;"><h3 style="color:#8A0868; font-size:125%;font-family:arial;" align="left"><strong>{{'report_generation_select_period' | translate}}</strong></h3></td>
+            <td ng-if="reportSettingMapping[currentReport.id].periodType =='monthly'">
+<div class="col-md-3">
+		<select class="form-control input-small" style="width:100%" ng-model="currentReport.period.month" placeholder="{{'please_select_month' | translate}}" 
+                        ng-options="month.id as month.name for month in monthList">
+                </select>
+</div>
+	<div class="col-md-3">
+		<select class="form-control " style="width:100%" ng-model="currentReport.period.year" placeholder="{{'please_select_year' | translate}}"
+                        ng-options="year as year for year in yearList">
+                </select>
+</div>
+<!--
+                <input type="text" 
+		       style="width:70%" 
+                       name="foo"
+                       class="form-control typeahead"
+                       ng-model="currentReport.period.month"
+                       placeholder="{{'please_select_month' | translate}}"
+                       typeahead="month.id as month.name for month in monthList| filter:$viewValue | limitTo:20"
+                       typeahead-focus-first="false"
+                       typeahead-editable=false
+                       ng-disabled="editingDisabled" ng-required="true"/>
+                <input type="text"
+		       style="width:70%" 
+                       name="foo"
+                       class="form-control typeahead"
+                       ng-model="currentReport.period.year"
+                       placeholder="{{'please_select_year' | translate}}"
+                       typeahead="year as year for year in yearList| filter:$viewValue | limitTo:20"
+                       typeahead-focus-first="false"
+                       typeahead-editable=false
+                       ng-disabled="editingDisabled" ng-required="true"/>
+-->
+            </td>
+            <td ng-if="reportSettingMapping[currentReport.id].periodType == 'start-end'">
+<div class="col-md-3">
+                <input type="text"
+		       style="width:100%" 
+                       placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                       name="foo"
+                       class="form-control"
+                       d2-date
+                       d2-date-validator
+                       max-date="0"
+                       ng-model="currentReport.startDate"
+                       ng-disabled="editingDisabled"
+                       ng-required="true"/>
+</div>
+<div class="col-md-3">
+
+                <input type="text"
+		       style="width:100%" 
+                       placeholder="{{dhis2CalendarFormat.keyDateFormat}}"
+                       name="foo"
+                       class="form-control"
+                       d2-date
+                       d2-date-validator
+                       max-date="0"
+                       ng-model="currentReport.endDate"
+                       ng-disabled="editingDisabled"
+                       ng-required="true"/>
+</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: middle;">&nbsp;</td>
+            <td style="vertical-align: middle;">
+<div class="col-md-6">
+            	<button type="button" class="btn btn-primary btn-md margin-base-vertical"  style="width:100%" 
+ng-click="generateReport()">{{'report_generation_generate'| translate}}</button>
+</div>
+            </td>
+        </tr>
+    </table>
+        
+    </div>
+
+</div>

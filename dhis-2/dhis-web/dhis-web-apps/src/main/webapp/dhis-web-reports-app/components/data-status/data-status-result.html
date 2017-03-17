@@ -1,0 +1,33 @@
+<br /><br /><br />
+<div class="col-sm-12" align="right">
+    <button class="btn btn-primary" ng-click="back()">Back</button>
+</div>
+<div class="page">
+    <h2>&nbsp;&nbsp;&nbsp;{{'data_entry_status'| translate}} For DataSet : {{dataSetName}} </h2>
+    <!--<h3>&nbsp;&nbsp;&nbsp;DataSet : {{dataSetName}}</h3>-->
+    <hr/>
+    <table class="dhis2-list-table-striped dhis2-table-hover">
+        <thead>
+        <th>&nbsp;&nbsp;&nbsp;{{'slNo'|translate}}</th>
+        <th>{{'organisationUnit'|translate}}</th>
+
+        <th ng-repeat="period in periodList">{{periodListMap[period]}}</th>
+
+        </thead>
+        <tr ng-repeat="orgUnit in filteredOrgUnitList" >
+            <td >
+                &nbsp;&nbsp;&nbsp;{{$index + 1}}
+            </td>
+            <td >
+                {{orgUnit.name}}
+            </td>
+            <td ng-repeat="period in periodList">
+                <!--{{period}}-->
+                &nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<br />

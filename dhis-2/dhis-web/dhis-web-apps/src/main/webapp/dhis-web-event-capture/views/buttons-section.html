@@ -1,0 +1,12 @@
+<div style="clear: both;">                        
+    <span ng-if="editingEventInFull">
+        <button type="button" ng-click="updateEvent()" class="button hideInPrint">{{'update'| translate}}</button>
+        <button type="button" ng-click="cancel()" class="button hideInPrint">{{'cancel'| translate}}</button>
+    </span>
+    <span ng-if="eventRegistration">
+        <button type="button" ng-disabled="disableSaveAndAddNew" ng-click="addEvent(true)" class="button hideInPrint">{{'save_and_add_new'| translate}}</button>
+        <button type="button" ng-click="addEvent()" class="button hideInPrint">{{'save_and_back'| translate}}</button>
+        <button type="button" ng-click="cancel()" class="button hideInPrint">{{'cancel'| translate}}</button>
+    </span>
+    <br><span ng-if="isFormInvalid()" class="horizontal-spacing red">{{'form_invalid' | translate}}</span>
+</div>
