@@ -1,0 +1,423 @@
+
+<script type="text/javascript">
+
+	var utilizationRateTariffMap = new Object();
+	
+	#foreach( $utilizationRateDe in $utilizationRateDataElements )
+		utilizationRateTariffMap["$utilizationRateDe.getId()"] = '$utilizationRatesMap.get($utilizationRateDe.getId())';
+	#end
+	
+	document.getElementById("utilizationRate").value = '$!utilizationRate';
+	
+	var urDEListSize = document.getElementById("urDataElementSize").value;
+	
+	//alert( urDEListSize );
+	if( urDEListSize > 0 )
+	{
+		//$( '#urDataElementDiv' ).show();
+		//alert( "Greater " + urDEListSize );
+		//document.getElementById("urDataElementLavel").style.visibility= "visible";
+		//document.getElementById("urDataElementText").style.visibility= "visible";
+		
+		showById('urDataElementLavel');
+		showById('urDataElementText');
+		
+	}
+	
+	else
+	{
+		//$( '#urDataElementDiv' ).hide();
+		//alert( "less and equal " + urDEListSize );
+		//document.getElementById("urDataElementLavel").style.visibility= "hidden";
+		//document.getElementById("urDataElementText").style.visibility= "hidden";
+		
+		hideById('urDataElementLavel');
+		hideById('urDataElementText');
+	}
+		
+	//getUtilizationRateTariffValue();
+		
+</script>
+
+
+## Macro for generating the jQuery validation rules 
+
+#macro( validate $type $require )
+  #if( $type == "NUMBER" || $type == "number" )
+    {validate:{ number:true #if($require), required:true #end }}
+  
+	#elseif( $type == "int" )
+  	{validate:{ integer:true #if($require), required:true #end }}
+  	
+  	#elseif( $type == "positiveNumber" )
+  	{validate:{ positive_integer:true #if($require), required:true #end }}
+  	
+	#elseif( $type == "negativeNumber" )
+  	{validate:{ negative_integer:true #if($require), required:true #end }}
+  
+  
+	#elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+
+<select id="utilizationRateDataElementLB" size="10" style="display:none" >
+    #foreach( $utilizationRateDataElement in $utilizationRateDataElements )
+        <option value="$utilizationRateDataElement.id">$utilizationRateDataElement.name</option>
+    #end
+</select>
+<select id="pbfDataElementLB" size="10" style="display:none" >
+    #foreach($dataElement in $dataElements )
+        <option value="$dataElement.id">$dataElement.name</option>
+    #end
+</select>
+
+<input type="hidden" id='totalDataElementId' name = 'totalDataElementId' value="$!totalDataElementId" />
+<input type="hidden" id='dataSetLockStatus' name = 'dataSetLockStatus' value="$locked" />
+<input type="hidden" id='urDataElementSize' name = 'urDataElementSize' value="$utilizationRateDataElements.size()" />
+
+
+#set( $tabIndex = 1 )
+#if ( $dataElements.size() > 0)
+<!--
+#if( $locked )
+	In side if ---- $locked
+#else
+	In Side else --- $locked
+#end
+-->
+<table class="formSection" id="dataEntryTable" style="width:100%">
+    
+	<tr bgcolor="#CBDDEB">
+		<th style="width:35%;">$i18n.getString( "dataelement" )</th>
+		
+		<th style="width:35%;">$i18n.getString( "partner" )</th>
+		
+		<th style="text-align: center;width:15%;">$i18n.getString( "qty_reported" )</th>
+		
+		#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityValidated") || $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") || $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfAdminDataEntry" ) )
+			<th style="text-align: center;width:15%;">$i18n.getString( "qty_validated" )</th>
+		#end
+
+		#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") || $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfAdminDataEntry" ) )			
+			<th style="text-align: center;width:15%;">$i18n.getString( "qty_external_verification" )</th>
+		#end
+
+		#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityValidated") || $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") || $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfAdminDataEntry" ) )
+			<th style="text-align: center;width:15%;">$i18n.getString( "tariff_amount" )</th>
+			<th style="text-align: center;width:15%;">$i18n.getString( "total" )</th>
+		#end
+			
+	</tr>
+	<script>
+		var allTotal = 0.0;
+	</script>
+	#set( $mark = false )
+	#foreach($dataElement in $dataElements )
+		#if( $mark1 )
+           #set( $mark1 = false )
+        #else
+          #set( $mark1 = true )
+        #end
+		<tr #if( $mark1 ) bgcolor = "#FFFFFF" #else bgcolor="#E0ECF8" #end>
+			<td><label>$dataElement.getDisplayName()</label></td>
+			
+			#set( $count = 0)						
+			#set( $pbfDataValue = $!pbfDataValueMap.get( $dataElement ) )
+
+            <td><label>$!pbfDataValue.getOption().getDisplayName()</label></td>				
+				
+				#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfAdminDataEntry" ) )
+					<td>
+        				<input onblur="savePBFDataValue('$dataElement.id', 1 )" type="text" name="pbfdv_qty_reported_$dataElement.id" id="pbfdv_qty_reported_$dataElement.id" 
+        						value="$!pbfDataValue.quantityReported" tabindex="$tabIndex" style="text-align: center;" 
+        						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+        						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+        						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+        						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+        						#end  />
+        			</td>
+					<td>
+        				<input onblur="savePBFDataValue('$dataElement.id', 2 )" onkeyup="calTariffVal('$dataElement.id')" type="text" name="pbfdv_qty_validated_$dataElement.id" id="pbfdv_qty_validated_$dataElement.id" 
+        						value="$!pbfDataValue.quantityValidated" tabindex="$tabIndex" style="text-align: center;" 
+        						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+        						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+        						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+        						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+        						#end class="quantity$count"  />
+        			</td>
+        				<script>
+        					function changeInt()
+        					{
+        						var tariff = 0.0;
+        					if('$!pbfDataValue.tariffAmount' != '' )
+        					{
+        						tariff = parseFloat($pbfDataValue.tariffAmount);
+        						$('#pbfdv_tariff_amt_'+$dataElement.id).val(tariff);
+        					}					
+        											
+        					}
+        					changeInt();
+        				</script>
+						
+						<td>
+            				<input onblur="savePBFDataValue('$dataElement.id', 3 )" type="text" name="pbfdv_qty_external_verification_$dataElement.id" id="pbfdv_qty_external_verification_$dataElement.id" 
+            						value="$!pbfDataValue.getQuantityExternalVerification()" tabindex="$tabIndex" style="text-align: center;" 
+            						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+            						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+            						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+            						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+            						#end  />
+    					</td>
+        				<script>
+        					function changeInt()
+        					{
+        						var tariff = 0.0;
+        					if('$!pbfDataValue.tariffAmount' != '' )
+        					{
+        						tariff = parseFloat($pbfDataValue.tariffAmount);
+        						$('#pbfdv_tariff_amt_'+$dataElement.id).val(tariff);
+        					}					
+        											
+        					}
+        					changeInt();
+        				</script>							
+				#else
+        			<td>
+        				<input onblur="savePBFDataValue('$dataElement.id', 1 )" type="text" name="pbfdv_qty_reported_$dataElement.id" id="pbfdv_qty_reported_$dataElement.id" 
+        						value="$!pbfDataValue.quantityReported" tabindex="$tabIndex" style="text-align: center;" 
+								#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") ) disabled="disabled" #end
+        						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+        						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+        						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+        						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+        						#end  />
+        			</td>
+				
+					#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityValidated") || $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") )
+            			<td>
+            				<input onblur="savePBFDataValue('$dataElement.id', 2 )" onkeyup="calTariffVal('$dataElement.id')" type="text" name="pbfdv_qty_validated_$dataElement.id" id="pbfdv_qty_validated_$dataElement.id" 
+            						value="$!pbfDataValue.quantityValidated" tabindex="$tabIndex" style="text-align: center;" 
+									#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") ) disabled="disabled" #end
+            						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+            						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+            						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+            						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+            						#end class="quantity$count"  />
+            			</td>
+        				<script>
+        					function changeInt()
+        					{
+        						var tariff = 0.0;
+        					if('$!pbfDataValue.tariffAmount' != '' )
+        					{
+        						tariff = parseFloat($pbfDataValue.tariffAmount);
+        						$('#pbfdv_tariff_amt_'+$dataElement.id).val(tariff);
+        					}					
+        											
+        					}
+        					changeInt();
+        				</script>
+					#end
+					
+					#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") )
+    					<td>
+            				<input onblur="savePBFDataValue('$dataElement.id', 3 )" type="text" name="pbfdv_qty_external_verification_$dataElement.id" id="pbfdv_qty_external_verification_$dataElement.id" 
+            						value="$!pbfDataValue.getQuantityExternalVerification()" tabindex="$tabIndex" style="text-align: center;" 
+            						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+            						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+            						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+            						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+            						#end  />
+    					</td>
+        				<script>
+        					function changeInt()
+        					{
+        						var tariff = 0.0;
+        					if('$!pbfDataValue.tariffAmount' != '' )
+        					{
+        						tariff = parseFloat($pbfDataValue.tariffAmount);
+        						$('#pbfdv_tariff_amt_'+$dataElement.id).val(tariff);
+        					}					
+        											
+        					}
+        					changeInt();
+        				</script>				
+					#end
+
+				#end
+					
+    			<td>
+    				<input type="text" name="pbfdv_tariff_amt_$dataElement.id" id="pbfdv_tariff_amt_$dataElement.id" 
+    						value="$!pbfDataValue.tariffAmount" tabindex="$tabIndex" style="text-align: center;" 
+    						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+    						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+    						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+    						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+    						#end class="tariff$count" readonly/>
+    			</td>
+    			<td >
+    				<input type="text" id="total_$dataElement.id" style="text-align: center;" readonly  />
+                </td>
+							
+
+				<script >				
+                    function calVal( ) {
+    					var total = 0.0;
+                     	var quantity = 0.0;
+    					var tariff = 0.0;
+    					if($('#pbfdv_tariff_amt_'+$dataElement.id).val() != '')
+    					{						
+    						tariff = parseFloat($('#pbfdv_tariff_amt_'+$dataElement.id).val());
+    					}
+    					else
+    					{
+    						tariff = 0;
+    					}
+    					
+    					if($('#pbfdv_qty_validated_'+$dataElement.id).val() != '')
+    					{
+    						quantity = parseFloat($('#pbfdv_qty_validated_'+$dataElement.id).val());
+    
+    					}
+    					else
+    					{
+    						quantity = 0;
+    					}
+    					
+    					total = quantity * tariff;
+    					
+    					$('#total_'+$dataElement.id).val(total);
+    					
+    					allTotal = allTotal + total;
+    					
+    					$('#all-total').val(allTotal);
+                    }
+                    
+                    calVal();
+                                        
+            	</script>
+			
+			#end
+					
+			#set( $count = $count + 1)
+		</tr>
+		#set( $tabIndex = $tabIndex + 1 )
+		#set( $mark = !$mark)	
+#end
+
+	#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityValidated") || $auth.hasAccess( "dhis-web-maintenance-rbf", "quanitityExternalVerification") )
+		<tr>
+			<td >&nbsp;</td>
+			<td >&nbsp;</td>
+			<td >&nbsp;</td>
+			<td >&nbsp;</td>
+			<td >&nbsp;</td>
+			<td>
+				<input type="text" id="all-total" style="text-align: center;" readonly  />
+            </td>
+		</tr>
+	#end
+	<script>
+		
+function getUtilizationRateTariffValue()
+{
+    var utilizationRate = $('#utilizationRate').val();
+	//alert( utilizationRate );
+	
+	//alert( utilizationRate.length);
+	
+	var tempUtilizationRateDataElements = document.getElementById("utilizationRateDataElementLB");
+   	
+	//if( utilizationRate != "" || utilizationRate != " " || utilizationRate != '' || utilizationRate != ' ' || utilizationRate.length != 0 )
+	//{
+		for ( i=0; i < tempUtilizationRateDataElements.length; i++ )
+        {                    
+			var utilizationRateTariffMapValue1 = utilizationRateTariffMap[tempUtilizationRateDataElements.options[i].value];
+			
+			//alert( utilizationRateTariffMapValue1.split("#").length + " :  " + utilizationRateTariffMapValue1 );
+			
+			for( j=0; j < utilizationRateTariffMapValue1.split("#").length; j++ )
+			{
+		        var utilizationRateTariffMapValue = utilizationRateTariffMapValue1.split("#")[j];
+		        
+                var startRange = parseFloat( utilizationRateTariffMapValue.split(":")[0] );           
+                var endRange = parseFloat( utilizationRateTariffMapValue.split(":")[1] );
+                var tariffValue = parseFloat( utilizationRateTariffMapValue.split(":")[2] );    				
+			
+			    //alert( startRange + "--" + endRange + "--" +  tariffValue + "--" + utilizationRate );
+                
+                
+                if( utilizationRate != "" || utilizationRate != " " || utilizationRate != '' || utilizationRate != ' ' || utilizationRate.length != 0 )
+                {
+                	if( parseFloat( utilizationRate) >= parseFloat( startRange ) && parseFloat( utilizationRate ) < parseFloat( endRange ) )
+                    {	
+    					//alert( "2 Alert" + " : " + startRange + "--" + endRange + "--" +  tariffValue + "--" +  utilizationRate );
+    					var dataElementId = tempUtilizationRateDataElements.options[i].value;
+    					//alert( '#pbfdv_tariff_amt_'+dataElementId );
+                        $('#pbfdv_tariff_amt_'+dataElementId).val( tariffValue );
+    					
+    					//alert( $('#pbfdv_tariff_amt_'+dataElementId).val( parseFloat( tariffValue ) ) );
+                    }
+                }
+                
+                if(  utilizationRate.length == 0 )
+                {
+                	var dataElementId = tempUtilizationRateDataElements.options[i].value;
+					//alert( '#pbfdv_tariff_amt_'+dataElementId );
+                    $('#pbfdv_tariff_amt_'+dataElementId).val( "" );
+                }
+               
+            }
+        }
+	//}
+	            
+}
+
+			
+			function calTariffVal( dataElementId ) {
+					var total = 0.0;
+                 	var quantity = 0.0;
+					var tariff = 0.0;
+					if($('#pbfdv_tariff_amt_'+dataElementId).val() != '')
+					{						
+						tariff = parseFloat($('#pbfdv_tariff_amt_'+dataElementId).val());
+					}
+					else
+					{
+						tariff = 0;
+					}
+					
+					if($('#pbfdv_qty_validated_'+dataElementId).val() != '')
+					{
+						quantity = parseFloat($('#pbfdv_qty_validated_'+dataElementId).val());
+
+					}
+					else
+					{
+						quantity = 0;
+					}
+					
+					total = quantity * tariff;
+					
+					$('#total_'+dataElementId).val(total);
+					
+					var tempPBFDataElements = document.getElementById("pbfDataElementLB");			
+					var allTotal1 = 0.0;
+					for ( i=0; i < tempPBFDataElements.length; i++ )
+					{                
+						var tempDataElementId = tempPBFDataElements.options[i].value;
+						var tempTotal = parseFloat($('#total_'+tempDataElementId).val());
+						allTotal1 = allTotal1 + tempTotal;
+					}								
+			
+					$('#all-total').val(allTotal1);
+					
+					saveTotalValueInDataValue();					
+					
+                }
+				
+				
+	getUtilizationRateTariffValue();				
+	</script>
+</table>

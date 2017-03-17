@@ -1,0 +1,33 @@
+
+
+#if( $aggTypeId == "OVERALL UNADJUSTED PBF AMOUNT" )
+
+	<table style="width:100%" cellpadding="5" cellspacing="5">	
+        <tr>
+            <td style="width:40%">PBFType - Tariff</td>
+            <td style="width:60%">
+                <select id="pbfTypeDataSetId" name="pbfDataSetId" style="width:100%" multiple>
+                #foreach( $pbfTypeDataSet in $pbfTypeDataSets )
+				    <option value="$pbfTypeDataSet.id">$pbfTypeDataSet.name</option>
+                #end
+                </select>
+            </td>
+        </tr>
+	</table>
+
+#elseif( $aggTypeId == "OVERALL QUALITY SCORE" )
+
+    <table style="width:100%" cellpadding="5" cellspacing="5">  
+        <tr>
+            <td style="width:40%">PBFType - Quality</td>
+            <td style="width:60%">
+                <select id="pbfTypeDataSetId" name="pbfDataSetId" style="width:100%" multiple>
+                #foreach( $pbfTypeDataSet in $pbfTypeDataSets )
+                    <option value="$pbfTypeDataSet.id">$pbfTypeDataSet.name</option>
+                #end
+                </select>
+            </td>
+        </tr>
+    </table>
+
+#end

@@ -1,0 +1,22 @@
+<h2>Report Analyser</h2>
+
+#parse( "/dhis-web-commons/ouwt/orgunittreesearch.vm" )
+
+<script type="text/javascript">
+
+	function orgUnitHasBeenSelected( orgUnitIds )
+	{
+		document.generateReportForm.ouIDTB.value = orgUnitIds[0];
+		document.generateReportForm.orgUnitUid.value = orgUnitIds[0];
+
+		var reportTypeName = document.generateReportForm.reportTypeNameTB.value;
+
+		if(orgUnitIds != null && orgUnitIds != "" )
+		{
+			getPBFReports( orgUnitIds, reportTypeName );
+		}
+	}
+
+	selection.setListenerFunction( orgUnitHasBeenSelected );
+
+</script>

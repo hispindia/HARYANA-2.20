@@ -1,0 +1,22 @@
+
+<h3>$i18n.getString( "configuration" )</h3>
+
+<ul class="introList">
+    <!-- action name, Text Title, image id -->
+
+    #if( $auth.hasAccess( "dhis-web-maintenance-in", "configForm") )
+	    #introListImgItem( "configForm.action" "configuration" "configuration" )
+	#end
+
+	#if( $auth.hasAccess( "dhis-web-maintenance-in", "takeMysqlBackupResult") )
+	    #introListImgItem( "takeMysqlBackupResult.action" "take_dataBase_backup" "take_dataBase_backup" )
+	#end
+
+	#if( $auth.hasAccess( "dhis-web-maintenance-in", "maintenance") )
+        #introListImgItem( "maintenance.action" "maintenance" "maintenance" )
+    #end
+
+    #if( $auth.hasAccess( "dhis-web-maintenance-in", "advanceMysqlBackupForm") )
+        #introListImgItem( "advanceMysqlBackupForm.action" "advance_dataBase_backup" "take_dataBase_backup" )
+    #end
+</ul>

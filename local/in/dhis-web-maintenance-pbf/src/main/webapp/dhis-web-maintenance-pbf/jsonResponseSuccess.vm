@@ -1,0 +1,14 @@
+#set( $size = $dataSets.size() )
+{
+  "response": "success",
+  "message": "$!encoder.jsonEncode( ${message} )",
+  "dataSets": [
+#foreach( $dataSet in $dataSets )
+  {
+    "id": ${dataSet.id} ,
+    "name": "$!encoder.jsonEncode( ${dataSet.displayName} )"
+  }#if( $velocityCount < $size ),#end
+#end
+]
+   #if( $statusCode ),"status": ${statusCode}#end
+}

@@ -1,0 +1,53 @@
+
+#macro( validate $type $require )
+  #if( $type == "NUMBER" || $type == "number" )
+    {validate:{ number:true #if($require), required:true #end }}
+  
+	#elseif( $type == "int" )
+  	{validate:{ integer:true #if($require), required:true #end }}
+  	
+  	#elseif( $type == "positiveNumber" )
+  	{validate:{ positive_integer:true #if($require), required:true #end }}
+  	
+	#elseif( $type == "negativeNumber" )
+  	{validate:{ negative_integer:true #if($require), required:true #end }}
+  
+  
+	#elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+
+#set( $tabIndex = 1 )
+#if ( $dataElements.size() > 0)
+
+<table class="formSection" id="dataEntryTable" style="width:50%;">
+	<tr bgcolor="#CBDDEB">
+		<th style="text-align: left;width:35%;">$i18n.getString( "dataelement" )</th>
+		<th style="text-align: center;width:15%;">$i18n.getString( "quality_max" )</th>		
+	</tr>	
+	#set( $mark = false )
+	#foreach($dataElement in $dataElements )
+		#if( $mark1 )
+           #set( $mark1 = false )
+        #else
+          #set( $mark1 = true )
+        #end
+		<tr #if( $mark1 ) bgcolor = "#FFFFFF" #else bgcolor="#E0ECF8" #end>
+			<td><label>$dataElement.getFormNameFallback()</label></td>
+			
+			#set( $qualityDataValue = $!qualityMaxValueMap.get( $dataElement.id ) )
+			
+			<td>
+				<input onblur="saveQualityDataValue('$dataElement.id')" type="text" name="value_$dataElement.id" id="value_$dataElement.id" 
+						value="$!qualityDataValue.value" tabindex="$tabIndex" style="text-align: center;width:100%;" 
+						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+						#end  />
+			</td>
+		</tr>		
+	#end
+#end		
+</table>

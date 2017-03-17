@@ -1,0 +1,99 @@
+<script >
+function getParameters()
+{
+	if($("#aggType").val() != '-1')
+	{
+		$("#loadParameters").load("loadAggregationParam.action", 
+		{
+			aggTypeId : $('#aggType').val()
+		}
+		, function( ){            										
+	});
+	}
+}
+
+
+function formValidations()
+{
+   	//alert("validation");
+	
+    var aggTypeList = document.getElementById("aggType");
+    var aggTypeIndex = aggTypeList.selectedIndex;
+	
+	var dataElementList = document.getElementById("dataElementId");
+    var dataElementIndex = dataElementList.selectedIndex;
+	
+    if( dataElementList.options[dataElementIndex].value == null || dataElementList.options[dataElementIndex].value== "-1" ) 
+	{ 
+		showWarningMessage( "Please Select Data Element" );
+		
+		return false; 
+	}
+	
+    else if( aggTypeList.options[aggTypeIndex].value == null || aggTypeList.options[aggTypeIndex].value== "-1" ) 
+	{ 
+		showWarningMessage( "Please Select Aggregation Type" );
+		
+		return false; 
+	}
+	
+    return true;
+}
+
+</script>
+
+<h3>$i18n.getString( 'aggregation_query_builder_detail' )</h3>
+
+<form id="addAggregationForm" action="addAggregationQuery.action" method="post" onsubmit="return formValidations()">
+
+<table style="width:70%" cellpadding="5" cellspacing="5"> 
+	
+	<!--
+	<thead>
+      <tr>
+        <th colspan="2">$i18n.getString( "aggregation_query_builder_detail" )</th>
+      </tr>
+    </thead>
+	-->
+    <tbody>
+    	<tr style="display:none">
+        	<td style="width:40%"><label>$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        	<td style="width:60%"><input type="text" id="name" name="name" class="{validate:{required:true,minlength:2}}" style='width:100%; margin-bottom:-5px;'></td>
+    	</tr>    
+    	<tr>
+			<td style="width:40%"><label for="dataElement">&nbsp;&nbsp;&nbsp;$i18n.getString( "dataelement" )<em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+			<td style="width:60%">			
+				<select style='width:97%; margin-bottom:-5px;' id="dataElementId" name="dataElementId" >
+					<option value="-1" >Please Select</option>
+					#foreach( $dataElement in $dataElementList )
+						<option value="$dataElement.id">$dataElement.name</option>
+					#end
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:40%"><label for="operator">&nbsp;&nbsp;&nbsp;$i18n.getString( "type" )</label></td>
+			<td style="width:60%">			
+				<select style='width:97%; margin-bottom:-5px;' id="aggType" name="aggType" onchange="getParameters()">
+                    <option value="-1" >Please Select</option>
+					#foreach( $lookup in $lookups )
+						<option value="$lookup.name">$lookup.value</option>
+					#end
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div id="loadParameters" style="width:100%"></div>
+            </td>
+		</tr>
+		
+    </tbody>
+</table>
+
+<p>	
+	<input type="submit" value="$i18n.getString( 'add' )" />	
+	<input type="button" value="$i18n.getString( 'cancel' )" onclick="window.location.href='aggregationQueryList.action'" />
+</p>
+
+</form>

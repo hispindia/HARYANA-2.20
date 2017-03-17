@@ -1,0 +1,201 @@
+<script >
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+	var tableWidth = (parseInt( windowWidth ) * 70.2) / 100 ;	
+	var columnWidth = (parseInt( windowWidth ) * 10) / 100 ;
+$(function() {
+	$("#addDataElement").button();
+});
+Ext.require([
+    'Ext.form.field.ComboBox',    
+    'Ext.form.FieldSet', 	
+    'Ext.data.*'
+]);
+Ext.Loader.setConfig({
+		enabled: true
+	});
+	
+// Define the model for a State
+Ext.define('State', {
+    extend: 'Ext.data.Model',
+    fields: [        
+        {type: 'string', name: 'name'}
+    ]
+});
+
+// The data for all states
+var states = $dataElementList;
+
+
+function createStore() {
+    // The data store holding the states; shared by each of the ComboBox examples below
+    return Ext.create('Ext.data.Store', {
+        autoDestroy: true,
+        model: 'State',
+        data: states
+    });
+}
+Ext.onReady(function() {
+    Ext.tip.QuickTipManager.init();
+    // Simple ComboBox using the data store
+    var simpleCombo = Ext.create('Ext.form.field.ComboBox', {
+		fieldLabel: '',
+        renderTo: 'simpleCombo',
+        displayField: 'name',
+        labelWidth: 115,
+        width: 680,
+        size:58,
+        store: createStore(),
+        queryMode: 'local',
+        typeAhead: true,
+		listeners: {select: changeOwner}
+    });	
+	
+});
+
+var changeOwner = function(combo, record, index) {
+						var dataElementName = combo.getValue();
+						$('#dataElementName').val(dataElementName);
+        				$('#loadTariffDetails').load("loadTariffDetails.action", 
+            				{
+            					dataElementName:dataElementName,
+								orgUnitGroupId : $( "#orgUnitGroupId" ).val(),
+								orgUnitUid:$("#orgUnitUid").val()
+            				}
+            				, function( ){            										
+        				});
+	};
+	
+function getTariffData()
+{
+  $('#loadTariffDetails').load("loadTariffDetails.action", 
+            				{
+            					dataElementName : $('#dataElementName').val(),								
+								orgUnitGroupId : $( "#orgUnitGroupId" ).val(),
+								orgUnitUid : $("#orgUnitUid").val()
+            				}
+            				, function( ){  
+							loadExtTariff();
+        				});  	
+}
+
+function orgUnitGroupChange()
+{
+    if( $('#orgUnitGroupId').val() == "-1" )
+    {
+        document.getElementById('simpleCombo').style.display = 'none';
+        document.getElementById('loadTariffDetails').style.display = 'none';
+    }
+    else
+    {
+        document.getElementById('simpleCombo').style.display = 'block';
+        document.getElementById('loadTariffDetails').style.display = 'block';
+		
+		/*
+		$('#simpleCombo').load("dataElementTariffManagement.action",
+		{
+			orgUnitGroupId : $( "#orgUnitGroupId" ).val()
+        }
+            				, function( ){  
+							
+        				});  	
+		
+		*/
+        if( $('#dataElementName').val() != '' )
+        {
+            getTariffData();
+        }	
+	}
+}
+
+function organisationUnitSelected( orgUnits, orgUnitNames )
+{
+	document.getElementById('simpleCombo').style.display = 'block';
+    enable('orgUnit'); 
+    setFieldValue("orgUnit", orgUnitNames[0]);
+	setFieldValue("orgUnitUid", orgUnits[0]);
+	document.getElementById('loadTariffDetails').style.display = 'block';
+	if( $('#dataElementName').val() != '' && $( "#orgUnitGroupId" ).val() != "-1" )
+	{
+		getTariffData();	
+	}
+}
+
+selection.setListenerFunction( organisationUnitSelected );
+
+function loadExtTariff()
+{
+			
+}
+
+</script>
+<style >
+	#tariffSetting {
+   width: 280px;
+   height: 50px;
+   margin: 10px 10px 10px 10px;
+   float:right;
+   padding: 10px 10px 10px 10px ;
+   font: 1.6em bold;
+   background: #ccc;
+   box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);   
+   -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);
+   -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);
+   }
+</style>
+
+<!--
+<div width="100%">
+	<div id="tariffSetting">
+		Tariff Setting Authority : $!tariff_setting_authority
+    </div>
+</div>
+-->
+
+<h3>$i18n.getString( "dataelement_tariff_target_management" )</h3>
+<br/>
+<input type="hidden" name="orgUnitUid" id="orgUnitUid" />
+<input type="hidden" name="dataElementName" id="dataElementName" value="" />
+<div class="inputCriteria" style="height:130px;">
+<table >	
+    <tr>
+        <td>Orgainsation Unit: </td>
+        <td>
+        	<input type="text" id="orgUnit" name="orgUnit" readonly size="55" />
+        	<input type="hidden" id="orgUnit" name="orgUnit" readonly size="55" style="display:none" />
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td >&nbsp;</td>
+        <td >&nbsp;</td>
+    </tr>
+	<tr>
+		<td>Orgainsation Unit Group: </td>
+		<td> 
+		    <select id="orgUnitGroupId" name="orgUnitGroupId" onchange="javascript:orgUnitGroupChange()" style="width:52%">
+                <option value="-1">[Please select]</option>		    	
+                #foreach( $orgUnitGroup in $orgUnitGroups )
+                	<option value="$!orgUnitGroup.id">$!orgUnitGroup.name</option>
+                #end
+      		</select>      		
+      	</td>
+		<td >&nbsp;</td>
+	</tr>
+	<tr >
+		<td >&nbsp;</td>
+		<td >&nbsp;</td>
+    </tr>
+	<tr>
+		<td>Select DataElement: </td>
+		<td><div id="simpleCombo" style="display:none;"></div></td>
+		<td ><input type="button" id="addDataElement" value="Add DataElement" disabled style="display:none;"/></td>
+	</tr>
+</table>
+</div>
+<br/><br/><br/>
+<div id="loadTariffDetails" style="width:85%"></div>
+	

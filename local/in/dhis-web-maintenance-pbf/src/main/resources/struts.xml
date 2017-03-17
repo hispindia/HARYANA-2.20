@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	
+	<include file="dhis-web-commons.xml"/>
+	
+	<package name="dhis-web-maintenance-pbf" extends="dhis-web-commons" namespace="/dhis-web-maintenance-pbf">
+	
+		<!-- Home page -->
+		<action name="index" class="org.hisp.dhis.pbf.action.NoAction">
+			<result name="success" type="velocity">/main.vm</result>
+			<param name="page">/dhis-web-maintenance-pbf/welcome.vm</param>
+			<param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+		</action>
+		<action name="dataElementTariffManagement" class="org.hisp.dhis.pbf.action.GetDataElementforTariffAction">
+			<result name="success" type="velocity">/main.vm</result>
+			<param name="page">/dhis-web-maintenance-pbf/loadDataElementsforTariff.vm</param>
+			<param name="menu">/dhis-web-maintenance-pbf/tariffMenu.vm</param>
+			<param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,../dhis-web-commons/javascripts/ext/ext-all.js,javascript/TransformGrid.js,javascript/dataElement_combo.js</param>
+			<param name="stylesheets">../dhis-web-commons/javascripts/ext/resources/css/ext-all-gray.css</param>
+		</action>
+		<action name="loadTariffDetails" class="org.hisp.dhis.pbf.action.LoadTariffDetailsAction">
+			<result name="success" type="velocity">/content.vm</result>
+			<param name="page">/dhis-web-maintenance-pbf/loadTariffData.vm</param>
+		</action>
+		 <action name="addTariffData" class="org.hisp.dhis.pbf.action.AddTariffDataAction">
+			<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/tariffStatus.vm</result>
+			<param name="onExceptionReturn">plainTextError</param>					
+		</action>
+		<action name="deleteTariffData" class="org.hisp.dhis.pbf.action.DeleteTariffDataAction">
+			<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/tariffStatus.vm</result>
+			<param name="onExceptionReturn">plainTextError</param>
+			<param name="requiredAuthorities">F_TARIFFDATAVALUE_UPDATE</param>					
+		</action>
+		
+		<action name="validateTariffData" class="org.hisp.dhis.pbf.action.ValidateTariffDataAction">
+			<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/tariffStatus.vm</result>
+			<param name="onExceptionReturn">plainTextError</param>								
+		</action>
+		
+		<!-- Load Bank Details -->
+		<action name="bankDetailsManagement" class="org.hisp.dhis.pbf.action.NoAction">
+            <result name="success" type="velocity">/main.vm</result>
+            <param name="page">/dhis-web-maintenance-pbf/loadBankData.vm</param>
+            <param name="menu">/dhis-web-maintenance-pbf/tariffMenu.vm</param>
+            <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,../dhis-web-commons/javascripts/ext/ext-all.js,javascript/TransformGrid.js</param>
+        	<param name="stylesheets">../dhis-web-commons/javascripts/ext/resources/css/ext-all-gray.css</param>
+        </action>
+        
+        <action name="loadbankDetails" class="org.hisp.dhis.pbf.action.LoadBankDetailsAction">
+            <result name="success" type="velocity">/content.vm</result>
+            <param name="page">/dhis-web-maintenance-pbf/getBankDetails.vm</param>            
+        </action>
+		
+		<action name="addBankData" class="org.hisp.dhis.pbf.action.AddBankDataAction">
+			<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/status.vm</result>
+			<param name="onExceptionReturn">plainTextError</param>					
+		</action>
+		<action name="deleteBankData" class="org.hisp.dhis.pbf.action.DeleteBankDataAction">
+			<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/status.vm</result>
+			<param name="onExceptionReturn">plainTextError</param>
+			<param name="requiredAuthorities">F_BANKDATA_UPDATE</param>					
+		</action>
+	
+	
+	
+<!--  PBF Data Entry -->	
+	
+	
+    <action name="pbfDataEntry" class="org.hisp.dhis.pbf.dataentry.PageInitAction">
+      <interceptor-ref name="organisationUnitTreeStack" />
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/dataEntrySelection.vm</param>
+      <param name="menu">/dhis-web-maintenance-pbf/menuDataEntry.vm</param>
+      <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,javascript/pbfDataEntry.js</param>
+      <param name="stylesheets">css/dataentry.css</param>
+    </action>	
+	
+    <!-- Get OrganisationUnit Unit name -->
+    <action name="getOrganisationUnit" class="org.hisp.dhis.pbf.dataentry.GetOrganisationUnitAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseSuccess.vm</result>
+        <result name="input" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseInput.vm</result>
+    </action>	
+	
+	<!-- Get Periods -->
+    <action name="loadPeriods" class="org.hisp.dhis.pbf.dataentry.LoadPeriodsAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonPeriods.vm</result>
+    </action>	
+	
+	<!-- Get Next and Previous Periods -->
+    <action name="getAvailableNextPrePeriods" class="org.hisp.dhis.pbf.dataentry.LoadNextPrePeriodsAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonPeriods.vm</result>
+    </action>		
+	
+	<!-- Load DataEntry Form -->
+	<action name="loadDataEntryForm" class="org.hisp.dhis.pbf.dataentry.LoadDataEntryFormAction">
+		<result name="success" type="velocity">/content.vm</result>
+		<param name="page">/dhis-web-maintenance-pbf/loadDataEntryForm.vm</param>
+	</action>	
+	
+	<!-- Save Value -->
+	<action name="saveValue"
+		class="org.hisp.dhis.pbf.dataentry.SaveValueAction">
+		<result name="success" type="velocity-json">
+			/dhis-web-maintenance-pbf/status.vm</result>
+		<param name="onExceptionReturn">plainTextError</param>					
+	</action>
+	
+	<!-- Quality Max Data Entry -->
+	
+	<action name="validateMaxData" class="org.hisp.dhis.pbf.quality.dataentry.ValidateQualityMaxDataAction">
+            <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/tariffStatus.vm</result>
+            <param name="onExceptionReturn">plainTextError</param>                              
+    </action>
+        
+	<action name="getOrganisationUnitForMax" class="org.hisp.dhis.pbf.quality.dataentry.GetOrganisationUnitForMaxAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseSuccess.vm</result>
+        <result name="input" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseInput.vm</result>
+    </action>
+    
+	 <action name="qualityMaxDataEntry" class="org.hisp.dhis.pbf.quality.dataentry.QualityMaxInitAction">
+      <interceptor-ref name="organisationUnitTreeStack" />
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/qualityMaxEntrySelection.vm</param>
+      <param name="menu">/dhis-web-maintenance-pbf/menuMaxEntry.vm</param>
+      <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,javascript/qualityMaxDataEntry.js</param>
+      <param name="stylesheets">css/dataentry.css</param>
+    </action>
+	
+	<!-- Load DataEntry Form -->
+	<action name="loadQualityMaxForm" class="org.hisp.dhis.pbf.quality.dataentry.LoadQualityMaxDetailsAction">
+		<result name="success" type="velocity">/content.vm</result>
+		<param name="page">/dhis-web-maintenance-pbf/loadQualityMaxEntryForm.vm</param>
+	</action>
+	
+	<!-- Save Quality Value -->
+	<action name="saveQualityValue"
+		class="org.hisp.dhis.pbf.quality.dataentry.SaveQualityValueAction">
+		<result name="success" type="velocity-json">
+			/dhis-web-maintenance-pbf/status.vm</result>
+		<param name="onExceptionReturn">plainTextError</param>					
+	</action>
+	
+	<!-- Quality Score Data Entry -->
+	<action name="getOrganisationUnitForScore" class="org.hisp.dhis.pbf.quality.dataentry.GetOrganisationUnitForScoreAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseSuccess.vm</result>
+        <result name="input" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseInput.vm</result>
+    </action>
+    
+	<action name="qualityScoreDataEntry" class="org.hisp.dhis.pbf.quality.dataentry.QualityScoreInitAction">
+      <interceptor-ref name="organisationUnitTreeStack" />
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/qualityScoreEntrySelection.vm</param>
+      <param name="menu">/dhis-web-maintenance-pbf/menuScoreEntry.vm</param>
+      <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,javascript/qualityScoreDataEntry.js</param>
+      <param name="stylesheets">css/dataentry.css</param>
+    </action>
+    
+	<!-- Load DataEntry Form -->
+	<action name="loadQualityScoreForm" class="org.hisp.dhis.pbf.quality.dataentry.LoadQualityScoreDetailsAction">
+		<result name="success" type="velocity">/content.vm</result>
+		<param name="page">/dhis-web-maintenance-pbf/loadQualityScoreEntryForm.vm</param>
+	</action>
+	
+	<!-- Save Quality Score Value -->
+	<action name="saveDataValue" class="org.hisp.dhis.pbf.quality.dataentry.SaveDataValueAction">
+		<result name="success" type="velocity-json">
+			/dhis-web-maintenance-pbf/status.vm</result>
+		<param name="onExceptionReturn">plainTextError</param>					
+	</action>
+		
+	<!-- Payment Adjustment Screen -->
+		
+	 <action name="loadPaymentPeriods" class="org.hisp.dhis.pbf.payment.action.LoadPaymentPeriodsAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonPeriods.vm</result>
+    </action>
+	
+	<action name="getPaymentAvailableNextPrePeriods" class="org.hisp.dhis.pbf.payment.action.LoadPaymentNextPrePeriodsAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonPeriods.vm</result>
+    </action>
+		
+	<action name="getOrganisationUnitForPayment" class="org.hisp.dhis.pbf.payment.action.GetOrganisationUnitForPaymentAction">
+        <result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseSuccess.vm</result>
+        <result name="input" type="velocity-json">/dhis-web-maintenance-pbf/jsonResponseInput.vm</result>
+    </action>
+    
+	<action name="getPaymentAdjustmentDetail" class="org.hisp.dhis.pbf.payment.action.GetPaymentAdjustmentDetailsAction">
+      <interceptor-ref name="organisationUnitTreeStack" />
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/getPaymentAdjustmentList.vm</param>
+      <param name="menu">/dhis-web-maintenance-pbf/menuPayment.vm</param>
+      <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js,javascript/paymentAdjustment.js</param>
+      <param name="stylesheets">css/dataentry.css</param>
+    </action>
+    
+	<!-- Load Payment Adjustment List -->
+	<action name="loadPaymentAdjustmentList" class="org.hisp.dhis.pbf.payment.action.LoadPaymentAdjustmentAction">
+		<result name="success" type="velocity">/content.vm</result>
+		<param name="page">/dhis-web-maintenance-pbf/loadPaymentAdjustment.vm</param>
+	</action>
+
+    <!--  Aggregation Engine -->
+    <action name="aggregationQueryList" class="org.hisp.dhis.pbf.aggregation.action.AggregationQueryListAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/aggregationQueryList.vm</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+        <param name="javascripts">javascript/aggregationEngine.js</param>
+    </action>
+
+    <action name="addAggregationQueryForm" class="org.hisp.dhis.pbf.aggregation.action.AddAggregationQueryFormAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/addAggregationQuery.vm</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+        <param name="javascripts">javascript/aggregationEngine.js</param>
+    </action>
+    
+    <action name="loadAggregationParam" class="org.hisp.dhis.pbf.aggregation.action.GetAggregationParameterAction">
+        <result name="success" type="velocity">/content.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/addAggregationParam.vm</param>            
+    </action>
+
+    <action name="addAggregationQuery" class="org.hisp.dhis.pbf.aggregation.action.AddAggregationQueryAction">
+        <result name="success" type="redirect">aggregationQueryList.action</result>
+    </action>
+
+    <action name="runAggregationQueryForm" class="org.hisp.dhis.pbf.aggregation.action.RunAggregationQueryFormAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/runAggregationQueryForm.vm</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+        <param name="javascripts">javascript/prevNextPeriods.js</param>
+    </action>
+
+    <action name="runAggregationQuery" class="org.hisp.dhis.pbf.aggregation.action.RunAggregationQueryAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/runAggregationQueryResult.vm</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+    </action>
+
+
+ 	<!-- Show Update  Aggregation Query Form -->
+    <action name="showUpdateAggregationForm" class="org.hisp.dhis.pbf.aggregation.action.ShowUpdateAggregationQueryFormAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/updateAggregationQueryForm.vm</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+        <param name="javascripts">javascript/aggregationEngine.js</param>
+    </action>
+ 
+ 
+ 	<!--  Update  Aggregation Query -->
+    <action name="updateAggregationQuery" class="org.hisp.dhis.pbf.aggregation.action.UpdateAggregationQueryAction">
+        <result name="success" type="redirect">aggregationQueryList.action</result>
+    </action>
+
+ 	<!--  Remove/Delete Aggregation -->
+	<action name="removeAggregation" class="org.hisp.dhis.pbf.aggregation.action.RemoveAggregationQueryAction">
+		<result name="success" type="velocity-json">/dhis-web-commons/ajax/jsonResponseSuccess.vm</result>
+	</action>
+	
+    <!--  Get Details Aggregation -->
+	<action name="getAggregation" class="org.hisp.dhis.pbf.aggregation.action.GetAggregationQueryAction">
+		<result name="success" type="velocity-json">/dhis-web-maintenance-pbf/jsonAggregationQuery.vm</result>
+		<param name="onExceptionReturn">plainTextError</param>
+	</action>
+
+	<!-- Lookup -->
+    
+    <!-- Get All Lookups -->
+   <action name="getAllLookups" class="org.hisp.dhis.pbf.lookup.action.GetAllLookupsAction">
+   		<result name="success" type="velocity">/main.vm</result>
+   		<param name="page">/dhis-web-maintenance-pbf/getAllLookups.vm</param>
+   		<param name="javascripts">javascript/lookup.js</param>
+   		<param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+   </action>
+   
+   <!-- Add Lookup -->
+   <action name="addLookupForm" class="org.hisp.dhis.pbf.lookup.action.AddLookupFormAction">
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/addLookupForm.vm</param>
+      <param name="javascripts">javascript/lookup.js</param>
+      <param name="anyAuthorities">F_DATASET_PUBLIC_ADD, F_DATASET_PRIVATE_ADD</param>
+    </action>
+    
+    <!-- Save Lookup -->
+    <action name="addLookup" class="org.hisp.dhis.pbf.lookup.action.AddLookupAction">
+      <result name="success" type="redirect">getAllLookups.action?currentPage=${keyCurrentPage}&amp;key=${keyCurrentKey}</result>
+      <param name="anyAuthorities">F_DATASET_PUBLIC_ADD, F_DATASET_PRIVATE_ADD</param>
+    </action>
+
+	<!-- Delete Lookup --> 
+    <action name="delLookup" class="org.hisp.dhis.pbf.lookup.action.DelLookup">
+      <result name="success" type="velocity-json">/dhis-web-commons/ajax/jsonResponseSuccess.vm</result>
+      <result name="error" type="velocity-json">/dhis-web-commons/ajax/jsonResponseError.vm</result>
+      <param name="onExceptionReturn">plainTextError</param>
+      <param name="requiredAuthorities">F_DATASET_DELETE</param>
+    </action>
+    
+    <!-- Edit Lookup -->    
+    <action name="editLookupForm" class="org.hisp.dhis.pbf.lookup.action.EditLookupFormAction">
+      <result name="success" type="velocity">/main.vm</result>
+      <param name="page">/dhis-web-maintenance-pbf/editLookup.vm</param>
+      <param name="javascripts">javascript/lookup.js</param>
+      <param name="anyAuthorities">F_DATASET_PUBLIC_ADD, F_DATASET_PRIVATE_ADD</param>
+    </action>
+    
+    <!-- Update Lookup -->    
+    <action name="updateLookup" class="org.hisp.dhis.pbf.lookup.action.UpdateLookupAction">
+      <result name="success" type="redirect">getAllLookups.action?currentPage=${keyCurrentPage}&amp;key=${keyCurrentKey}</result>
+      <param name="anyAuthorities">F_DATASET_PUBLIC_ADD, F_DATASET_PRIVATE_ADD</param>
+    </action>
+    
+    <!-- Show Details -->   
+ 	<action name="getLookup" class="org.hisp.dhis.pbf.lookup.action.GetLookupAction">
+      <result name="success" type="velocity-json"> /dhis-web-maintenance-pbf/jsonLookup.vm</result>
+      <param name="onExceptionReturn">plainTextError</param>
+    </action>
+    
+    <!-- Validate Lookup -->
+    <action name="validateLookup" class="org.hisp.dhis.pbf.lookup.action.ValidateLookupAction">
+      <result name="success" type="velocity-json">/dhis-web-commons/ajax/jsonResponseSuccess.vm</result>
+      <result name="input" type="velocity-json">/dhis-web-commons/ajax/jsonResponseInput.vm</result>
+      <param name="onExceptionReturn">plainTextError</param>
+    </action>
+
+
+    <!-- Reports -->
+    <action name="PBFInvoiceReportForm" class="org.hisp.dhis.pbf.report.action.PBFInvoiceReportFormAction">
+        <result name="success" type="velocity">/main.vm</result>
+        <param name="page">/dhis-web-maintenance-pbf/PBFInvoiceReportForm.vm</param>
+        <param name="javascripts">javascript/prevNextPeriods.js</param>
+        <param name="menu">/dhis-web-maintenance-pbf/menu.vm</param>
+   </action>
+	
+	</package>
+</struts>

@@ -1,0 +1,87 @@
+#sharingDialog()
+
+<script type="text/javascript">
+	jQuery(document).ready(function(){	
+		tableSorter( 'qualityScorePaymentList' );
+
+    dhis2.contextmenu.makeContextMenu({
+      menuId: 'contextMenu',
+      menuItemActiveClass: 'contextMenuItemActive'
+    });
+	});
+
+	var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_quality_score_payment" ) , "'" )';
+</script>
+
+<h3>$i18n.getString( "quality_score_payment_management" ) #openHelp("lookup")</h3>
+	
+<div id="contextMenu" class="contextMenu">
+  <ul id="contextMenuItems" class="contextMenuItems">
+    <li><a data-target-fn="editQualityScorePaymentForm"><i class="fa fa-edit"></i>&nbsp;&nbsp;$i18n.getString( "edit" )</a></li>
+    <li><a data-target-fn="translateWithContext"><i class="fa fa-globe"></i>&nbsp;&nbsp;$i18n.getString( "translation_translate" )</a></li>
+    <li><a data-target-fn="removeQualityScorePayment"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;$i18n.getString( "remove" )</a></li>
+    <li><a data-target-fn="showQualityScorePaymentDetails"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;$i18n.getString( "show_details" )</a></li>
+  </ul>
+</div>
+	
+
+<table class="mainPageTable" >
+  <tr>
+    <td style="vertical-align:top">    	
+        <table width="100%">         
+			<tr>
+				<!--<td>#filterDiv( "qualityScorePaymentList")</td>-->
+                <td style="text-align:right">
+                    <input type="button" value="$i18n.getString( 'add_new' )" onclick="window.location.href='addQualityScorePaymentForm.action'" >
+                </td>
+            </tr>
+        </table>
+        <table class="listTable" id="qualityScorePaymentList" >
+            <col>
+            <thead>
+                <tr>
+                    <th>$i18n.getString( "stare_range" )</th>
+					<th>$i18n.getString( "end_range" )</th>
+					<th>$i18n.getString( "additional_quality_payment" )</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+                #foreach( $qualityScorePayment in $qualityScorePayments )
+                    <tr id="tr${qualityScorePayment.id}" 
+                        data-id="$!qualityScorePayment.id" 
+                        data-type="qualityScorePayment" 
+                        data-name="$encoder.htmlEncode( $!qualityScorePayment.getStartRange() )"
+                        data-can-manage="$security.canManage( $qualityScorePayment )"
+                        data-can-update="$security.canUpdate( $qualityScorePayment )"
+                        data-can-delete="$security.canDelete( $qualityScorePayment )">
+                        <td>$encoder.htmlEncode( $!qualityScorePayment.getStartRange() )</td>
+						<td>$encoder.htmlEncode( $!qualityScorePayment.getEndRange() )</td>
+						<td>$encoder.htmlEncode( $!qualityScorePayment.getAddQtyPayment() )</td>
+                    </tr>
+                #end
+            </tbody>
+      </table>
+	 <p></p>
+  		##parse( "/dhis-web-commons/paging/paging.vm" )
+    </td>
+		<td id="detailsData">
+        <div id="detailsArea">
+            <div id="hideDetailsArea">
+					<a href="javascript:hideDetails()" title="$i18n.getString( 'hide_details' )"><img src="../images/hide.png" alt="$i18n.getString( 'hide_details' )"/></a>
+				</div>
+				<p><label>$i18n.getString( "stare_range" ):</label><br/><span id="stateRangeField"></span></p>
+				<p><label>$i18n.getString( "end_range" ):</label><br/><span id="endRangeField"></span></p>
+				<p><label>$i18n.getString( "additional_quality_payment" ):</label><br/><span id="additionalPaymentField"></span></p>
+				
+			</div>
+			
+      <div id="warningArea">
+        <div id="hideDetailsArea">
+          <a href="javascript:hideWarning()" title="$i18n.getString( 'hide_warning' )"><img src="../images/hide.png" alt="$i18n.getString( 'hide_warning' )"/></a>
+        </div>
+        <p><span id="warningField"></span></p>
+      </div>
+
+	</td>
+  </tr>
+</table>

@@ -1,0 +1,32 @@
+<script >
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+	var tableWidth = (parseInt( windowWidth ) * 72) / 100 ;	
+	var columnWidth = (parseInt( windowWidth ) * 12) / 100 ;
+function organisationUnitSelected( orgUnits, orgUnitNames )
+{
+		setFieldValue("orgUnit", orgUnitNames[0]);
+		setFieldValue("orgUnitUid", orgUnits[0]);
+		loadBankDetails();
+}
+
+function loadBankDetails()
+{
+	$('#loadBankDetails').load("loadbankDetails.action", 
+            				{
+            					dataElementName : $('#dataElementName').val(),
+								orgUnitUid : $("#orgUnitUid").val()
+            				}
+            				, function( ){            										
+        				});  	
+}
+selection.setListenerFunction( organisationUnitSelected );
+</script>
+<input type="hidden" name="orgUnitUid" id="orgUnitUid">
+<h3>Bank Detail Management</h3>
+<div style="width:100%">
+	Orgainsation Unit: &nbsp; <input type="text" id="orgUnit" name="orgUnit" readonly size="40"/>
+</div>
+<br/><br/>
+<div id="loadBankDetails" style="width:92%;margin:auto;">
+</div>

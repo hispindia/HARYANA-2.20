@@ -1,0 +1,26 @@
+<h2>Report Analyser</h2>
+
+<!--
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "reportManagement") )
+    <ul>
+        <li>Report Management</li>
+        <ul>
+            <li><a href = "reportManagement.action">Report Management</a></li>
+        </ul>
+    </ul>
+#end
+
+<!--
+<ul>
+	<li>Report Analysis</li>
+	<ul>
+		
+        #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfReportForm") )
+            <ul>
+                <li><a href="pbfReportForm.action">$i18n.getString( "pbf_report" )</a></li>
+            </ul>
+        #end
+		
+	</ul>
+</ul>
+-->

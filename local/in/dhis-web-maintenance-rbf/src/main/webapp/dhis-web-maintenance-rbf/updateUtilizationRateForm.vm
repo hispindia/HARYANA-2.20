@@ -1,0 +1,78 @@
+## Macro for generating the jQuery validation rules
+#macro( validate $type $require )
+  #if( $type == "NUMBER" )
+    {validate:{ number:true #if($require), required:true #end }}
+  #elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+<script>
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'updateUtilizationRateForm';
+        isSubmit = true;
+        jQuery("#updateUtilizationRateForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+                            updateUtilizationRate();
+                        }
+                    }
+            });
+    }); 
+    
+</script>
+
+<form id="updateUtilizationRateForm" name="updateUtilizationRateForm"  method="post" >
+  
+  <input type="hidden" id="dataElementId" name="dataElementId" value="$dataElement.id" />
+  <table width="100%">
+
+      <tr>
+        <th colspan="2">$i18n.getString( "Utilization Rule Details" )  : $dataElement.name</th>
+      </tr>
+    
+      <tr>
+        <td><label>$i18n.getString( "stare_range" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="startRange" name="startRange" value="$!utilizationRate.getStartRange()" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td>&nbsp;</td>
+		<td>&nbsp;</td>
+      </tr>		  
+	  
+      <tr>
+        <td><label>$i18n.getString( "end_range" )<em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="endRange" name="endRange" value="$!utilizationRate.getEndRange()" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td>&nbsp;</td>
+		<td>&nbsp;</td>
+      </tr>		  
+	  
+      <tr>
+        <td><label>$i18n.getString( "Tariff Value" )<em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+		<td><input type="text" id="tariff" name="tariff" value="$!utilizationRate.getTariff()" class="{validate:{required:true}}"></td>
+      </tr>
+
+      <tr>
+        <td>&nbsp;</td>
+		<td>&nbsp;</td>
+      </tr>	  
+	  
+	  <tr>
+        <td colspan="2">
+          <input type="submit" value="$i18n.getString( 'save' )" style="width:120px" />
+          <input type="button" onclick="closePopUpWindow();" value="$i18n.getString( 'cancel' )" style="width:120px" />
+        </td>
+      </tr>
+	  
+    
+  </table>
+</form>

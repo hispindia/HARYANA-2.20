@@ -1,0 +1,42 @@
+
+<h2>$i18n.getString( "dataanalyser" )&nbsp;</h2>
+	<ul>
+		<li>$i18n.getString( "ga" )&nbsp;</li>
+			<ul>
+		    	<!--<li><a href="graphicalAnalyser.action">$i18n.getString( "regular" )</a></li>
+		        <li><a href="annualAnalyser.action">$i18n.getString( "annual" )</a></li>-->
+		        <li><a href="graphicalAnalyserDataElement.action">$i18n.getString( "dataelements_wise" )&nbsp;</a></li>
+		        <li><a href="graphicalAnalyserIndicator.action">$i18n.getString( "indicator_wise" )&nbsp;</a></li>
+		        <!--<li><a href="surveyAnalyser.action">$i18n.getString( "survey" )</a></li>
+		        <li><a href="targetAnalyser.action">$i18n.getString( "target" )</a></li>-->
+		      <!--  <li><a href="motionChartForm.action">MotionChart</a></li> -->
+		   	</ul>
+		<li><a href="tabularAnalysisForm.action">$i18n.getString( "ta" )&nbsp;</a></li>
+		<!--<li><a href="validationRuleForm.action">Validation Rule</a></li>-->
+		<!--<li><a href="viewCommentForm.action">$i18n.getString( "vc" )</a></li>-->
+		<li>$i18n.getString( "ds_datastatus" )&nbsp;</li>
+			<ul>				
+		   		<!--<li><a href="dataStatusMartForm.action">$i18n.getString( "ds_mart" )</a></li>-->
+		   		<li><a href="dataStatusForm.action">$i18n.getString( "ds_regular" )&nbsp;</a></li>
+		   		<!--<li><a href="dataStatusMobileForm.action">$i18n.getString( "ds_mobile" )</a></li>
+				<li><a href="dataStatusOrgnisationunitGroupSetWiseForm.action">$i18n.getString( "orgunit_group_ds" )</a></li>-->
+				<li><a href="NullReporter.action">$i18n.getString( "nr_null_reporter" )&nbsp;</a></li>
+				<!--<li><a href="dataStatusDataSetWiseForm.action">$i18n.getString( "ds_dataset_wise" )</a></li>-->	
+	    		<!-- <li><a href="commentsForm.action">Comments</a></li>
+		   		<li><a href="dashBoardMatrixForm.action">DashBoard matrix</a></li> -->
+				
+				#if( $auth.hasAccess( "dhis-web-dashboard", "dataEntryFormStatus") )
+					<li><a href="dataEntryFormStatus.action">$i18n.getString( "data_entry_form_status" )&nbsp;</a></li>
+				#end
+				
+		   	</ul>
+		<!--
+		<li>$i18n.getString( "bulk_sms" )</li>
+			<ul>
+
+				<li><a href="excelSheetBulkSMSForm.action">Send Bulk SMS by Excel</a></li>
+				<li><a href="dueDates.action">$i18n.getString( "due_dates" )</a></li>
+				<li><a href="prgwiseSummaryBulkSMSForm.action">$i18n.getString( "Programwise Summary" )</a></li>
+			</ul>
+		-->	
+	</ul>

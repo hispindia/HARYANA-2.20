@@ -1,0 +1,62 @@
+<script type="text/javascript" src="javascript/updateQualityScorePayment.js"></script>
+<script>
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'updateQualityScorePaymentForm';
+        isSubmit = true;
+        
+        jQuery("#updateQualityScorePaymentForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+							
+                        }
+                    }
+            });
+    }); 
+    
+</script>
+
+<h3>$i18n.getString( "update_quality_score_payment_details" )</h3>
+
+<form id="updateQualityScorePaymentForm" name="updateQualityScorePaymentForm" action="updateQualityScorePayment.action" method="post" class="inputForm">
+<input type="hidden" id="id" name="id" value="$!qualityscorepayment.getId()" />  
+  
+  <table style="width: 600px">
+    <col style="width: 400px">
+    <col>
+    <thead>
+      <tr>
+        <th colspan="2">$i18n.getString( "quality_score_payment_details" )</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label>$i18n.getString( "stare_range" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="startRange" name="startRange" value="$!qualityscorepayment.getStartRange()" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "end_range" )</label></td>
+        <td><input type="text" id="endRange" name="endRange" value="$!qualityscorepayment.getEndRange()" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "additional_quality_payment" )</label></td>
+		<td><input type="text" id="addQualityPayment" name="addQualityPayment" value="$!qualityscorepayment.getAddQtyPayment()" ></td>
+      </tr>
+
+	  <tr>
+        <td colspan="3">
+          <input type="submit" value="$i18n.getString( 'save' )" style="width:120px" />
+          <input type="button" onclick="dhis2.commons.redirectCurrentPage( 'qualityScorePaymentList.action' )" value="$i18n.getString( 'cancel' )" style="width:120px" />
+        </td>
+      </tr>
+	  
+    </tbody>
+  </table>
+</form>

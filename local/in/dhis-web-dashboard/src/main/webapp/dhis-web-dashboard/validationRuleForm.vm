@@ -1,0 +1,210 @@
+<style>
+    #overlay {
+    z-index:9998;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#000;
+    opacity:0.45;
+    -moz-opacity:0.45;
+    filter:alpha(opacity=45);
+    visibility:hidden;
+    }
+    #overlayImg{ width: 50px; height: 50px; z-index: 9999; position: absolute; left:50%}
+</style>
+
+<div id="overlay">
+    <div id="overlayImg"><img  width="50" height="50" src="images/ajax-loader.gif" /></div>
+</div>
+
+<script>
+    
+    // Global Variables
+    var dailyPeriodTypeName = '$dailyPeriodTypeName';
+    var weeklyPeriodTypeName = '$weeklyPeriodTypeName';
+    var monthlyPeriodTypeName = '$monthlyPeriodTypeName';
+    var quarterlyPeriodTypeName = '$quarterlyPeriodTypeName';
+    var sixmonthPeriodTypeName = '$sixMonthPeriodTypeName';
+    var yearlyPeriodTypeName = '$yearlyPeriodTypeName';
+    var financialAprilPeriodType = '$financialAprilPeriodType';
+    
+    var maxOrgUnitLevels = $maxOrgUnitLevels;
+    var selOrgUnitId="NONE";
+    
+    var yearList = '$periodNameList';
+  	var regularYear = new Array();
+  	var financialYear = new Array();
+    
+    var days = new Array();
+    
+    var monthDays = new Array(31,29,31,30,31,30,31,31,30,31,30,31); // for daily Period    
+    
+    var monthNames = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+    var quarterNames = new Array("Q1","Q2","Q3","Q4");
+    var halfYearNames = new Array("HY1","HY2");
+    
+    var financialMonthNames = new Array("Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar");
+
+    k = 0;
+
+    for( i = 0; i< monthDays.length; i++ )
+    {
+        var curMonthDays = monthDays[i];
+     
+        for( j = 1; j<=curMonthDays; j++ )
+        {
+            if( (i+1) <= 9 )
+            {
+               // i = "0"+(i+1);
+               days[k]=  "0"+ (i+1);
+               
+            }
+            else
+            {
+            days[k]=  i+1;
+            }
+            if( j <= 9 )
+            {
+                days[k] += "-0"+j;
+            }
+            else
+            {
+            days[k] +=  "-"+j;
+            }    
+        
+            //days[k]= (i+1)+"-"+j;
+            //  days[k]=  i+"-"+j;
+            k++;
+         }
+    }
+
+ 
+    #set( $count2 = 0 );
+    #foreach( $year in $periodNameList )
+       regularYear[$count2] = $year;
+       financialYear[$count2] = $year + "-" + ($year+1);
+       #set( $count2 = $count2 + 1 );
+    #end
+    
+    var orgUnitGroupIds = new Array();
+    var orgUnitGroupNames = new Array();
+
+    #set( $count1 = 0 );
+    #foreach( $orgUnitGroup in $orgUnitGroups )
+       orgUnitGroupIds[$count1] = $orgUnitGroup.id;
+       orgUnitGroupNames[$count1] = '$orgUnitGroup.name';
+       #set( $count1 = $count1 + 1 );
+    #end
+    
+    
+    
+</script>
+
+
+<h1>Validation Rule Form</h1>
+<hr />
+
+<form id="validationRuleForm" name="validationRuleForm" action="validationRuleResult.action" method="post" onsubmit="return formValidationsForValidationRule()" target="_blank">  
+    <table align="center" style=" border-collapse: collapse; margin-top: 0;" cellpadding="0" cellspacing="0" width="100%" border=0>
+      
+        
+        <tr>
+            <td class="NormalB">&nbsp;</td>   
+            <td class="NormalB">&nbsp;</td>
+            <td class="NormalB">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="NormalB">
+                <table>
+                    <tr>
+                        <td class="NormalB">
+                            <select name="orgUnitSelListCB" id="orgUnitSelListCB" style="width: 150px;" onchange="ouListSelection()" >
+                                <option value="orgUnitLevelRadio">OrgUnit Levels</option>                                
+                                <option value="orgUnitGroupRadio">OrgUnitGroups</option>
+                                <option value="orgUnitSelectedRadio">Selected</option>
+                            </select>
+                             <br /><br />
+                        </td>
+                        <td class="NormalB">&nbsp;</td>  
+                        <td class="NormalB">
+                            <select id="aggData" name="aggData" style="width:150px">
+                                <option value="generateaggdata">$i18n.getString( "generate_agg_data" )</option>
+                                <option value="useexistingaggdata">$i18n.getString( "use_existing_agg_data" )</option>
+                                <option value="usecaptureddata">$i18n.getString( "use_captured_data" )</option>
+                            </select>
+                        </td>
+                    </tr>
+            
+              
+
+                    <tr>
+                        <td class="NormalB">$i18n.getString( "ga_orgunit" )<br>
+                            <select name="orgUnitListCB" id="orgUnitListCB" size="7" style="width: 150px;" ondblclick="remOUFunction()" >
+                            </select>                       
+                        </td>
+                        <td class="NormalB">&nbsp;</td>  
+                        <td class="NormalB">OrgUnitGroups/Level<br>
+                            <select name="orgUnitLevelCB" id="orgUnitLevelCB" size="7" style="width: 150px;">
+                            </select>
+                        </td>
+                        
+                    </tr>
+                </table>
+            </td>           
+            <td class="NormalB" align="center">
+                <table>
+                    <tr>
+                        <td class="NormalB">
+                            PeriodType: <br>
+                            <select id="periodTypeLB" name="periodTypeLB" onchange="getPeriods()" style="width: 150px;">                                
+                                #foreach ( $periodType in $periodTypes )
+                                    <option value="$periodType.name" #if($periodType.name==$monthlyPeriodTypeName) selected #end>$periodType.name</option>                              
+                                #end
+                            </select>
+                            <br /><br />                        
+                        </td>
+                        <td>&nbsp;</td>
+                        <td align="right" class="NormalB">
+                            <input type="checkbox" id="aggPeriodCB" name="aggPeriodCB" value="ON"> Aggregate By Period<br>
+                        </td>
+                    </tr>                                       
+                    <tr>
+                        <td class="NormalB">
+                            Year : <br>
+                            <select id="yearLB" name="yearLB" onchange="getWeeklyPeriod()"  size="5" multiple style="width: 150px;">                                                                                
+                                #foreach($periodName in $periodNameList)
+                                    <option value="$periodName">$periodName</option>                                
+                                #end
+                            </select>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td class="NormalB">
+                            Period : <br>
+                            <select id="periodLB" name="periodLB" size="5" multiple style="width: 175px;">                              
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>                                                                   
+                    <tr>
+                        <td>
+                            <input type="submit" id="ViewReport" name="ViewReport" value="$i18n.getString( 'ta_generatereport' )" style="width: 120; height: 25; font-family:Arial; font-weight:bold; color:#000000">
+                        </td>
+                        <td>&nbsp;</td>
+                        <td align="right">&nbsp;</td>
+                    </tr>                            
+                    <input type="hidden" name="selectedButton" id="selectedButton">
+                </table>    
+            </td>
+        </tr>
+    </table>                            
+</form>
+
+<script>
+  getPeriods();
+</script>

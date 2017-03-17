@@ -1,0 +1,114 @@
+<h2>$i18n.getString( "pbf_setup" )</h2>
+
+<ul>	
+	
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfDataEntry") )
+    	<li><a href="pbfDataEntry.action">$i18n.getString( "pbf_dataentry" )</a></li>
+    #end	
+	
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "qualityScoreDataEntry") )
+    	<li><a href="qualityScoreDataEntry.action">$i18n.getString( "quality_score_entry" )</a></li>
+    #end	
+
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "qualityMaxDataEntry") )
+    	<li><a href="qualityMaxDataEntry.action">$i18n.getString( "quality_max_entry" )</a></li>
+    #end	
+	
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "dataElementTariffManagement") )
+    	<li><a href="dataElementTariffManagement.action">$i18n.getString( "dataelement_tariff_target_management" )</a></li>
+    #end	
+
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "partnerFundManagementForm") )
+        <li><a href="partnerFundManagementForm.action">$i18n.getString( "partner_management" )</a></li>
+    #end
+	
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "bankDetailsManagement") )
+    	<li><a href="bankDetailsManagement.action">$i18n.getString( "bank_details_management" )</a></li>
+    #end	
+	
+    #if( $auth.hasAccess( "dhis-web-maintenance-rbf", "utilizationRuleManagement") )
+    	<li><a href="utilizationRuleManagement.action">$i18n.getString( "utilization_rule_management" )</a></li>
+	#end
+	
+	
+	<!--
+	<li><a href="pbfDataEntry.action">$i18n.getString( "pbf_dataentry" )</a></li>
+
+    <li><a href="qualityScoreDataEntry.action">$i18n.getString( "quality_score_entry" )</a></li>
+	
+	<li><a href="qualityMaxDataEntry.action">$i18n.getString( "quality_max_entry" )</a></li>
+	
+	<li><a href="dataElementTariffManagement.action">$i18n.getString( "dataelement_tariff_target_management" )</a></li>
+	
+	<li><a href="bankDetailsManagement.action">$i18n.getString( "bank_details_management" )</a></li>
+	
+	<li><a href="utilizationRuleManagement.action">$i18n.getString( "utilization_rule_management" )</a></li>
+	
+	-->
+	
+</ul>
+
+
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "qualityScorePaymentList") )
+	<h2>$i18n.getString( "quality_score_payment" )</h2>
+	<ul>
+		<li><a href="qualityScorePaymentList.action">$i18n.getString( "quality_score_payment" )</a></li>
+	</ul>
+#end
+
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "aggregationQueryList") )
+    <h2>$i18n.getString( "aggregation_builder" )</h2>
+    <ul>
+        <li><a href="aggregationQueryList.action">$i18n.getString( "aggregation_query_list" )</a></li>
+        <li><a href="runAggregationQueryForm.action">$i18n.getString( "manual_aggregation" )</a></li>
+    </ul>
+#end
+
+<!--
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfReportForm") )
+    <h2>$i18n.getString( "pbf_report" )</h2>
+    <ul>
+        <li><a href="pbfReportForm.action">$i18n.getString( "pbf_report" )</a></li>
+    </ul>
+#end
+-->
+
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "reportManagement") )
+    <ul>
+        <li><a href = "reportManagement.action">Report Management</a></li>
+		#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "pbfReportForm") )
+			<li><a href="pbfReportForm.action">$i18n.getString( "pbf_report" )</a></li>
+		#end	
+    </ul>
+    
+#end
+<!--
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "reportHomePage") )
+    <h2>$i18n.getString( "pbf_report" )</h2>
+    <ul>
+        <li><a href="reportHomePage.action">$i18n.getString( "pbf_report" )</a></li>
+    </ul>
+#end
+-->
+
+
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "getAllLookups") )
+    <h2>$i18n.getString( "Lookup" )</h2>
+    <ul>
+    	<li><a href="getAllLookups.action">$i18n.getString( "Lookup" )</a></li>
+    </ul>
+#end
+
+#if( $auth.hasAccess( "dhis-web-maintenance-rbf", "getPaymentAdjustmentDetail") )
+    <h2>$i18n.getString( "payment_adjustment" )</h2>
+    <ul>
+    	<li><a href="getPaymentAdjustmentDetail.action">$i18n.getString( "payment_adjustment" )</a></li>
+    </ul>
+#end
+
+<!--
+<h2>$i18n.getString( "reports" )</h2>
+<ul>
+    <li><a href="PBFInvoiceReportForm.action">$i18n.getString( "quarterly_invoice_for_PBF_indicators_PMA" )</a></li>
+</ul>
+-->

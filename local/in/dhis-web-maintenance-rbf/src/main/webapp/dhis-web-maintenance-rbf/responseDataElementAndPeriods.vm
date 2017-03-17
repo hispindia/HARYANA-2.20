@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataElements>
+	#foreach( $dataElement in $dataElements )	
+		<dataelement>
+			<id>$dataElement.id</id>
+			<name>$encoder.xmlEncode( $dataElement.getName() )</name>
+		</dataelement>
+	#end
+	#foreach( $period in $periods )	
+		<period>
+			<id>$period.id</id>
+			<name>$encoder.xmlEncode( $period.name )</name>
+		</period>
+	#end
+</dataElements>

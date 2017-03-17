@@ -1,0 +1,179 @@
+## Macro for generating the jQuery validation rules
+#macro( validate $type $require )
+  #if( $type == "NUMBER" )
+    {validate:{ number:true #if($require), required:true #end }}
+  #elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+<script type="text/javascript">
+
+//selection.setListenerFunction();
+
+/*
+function orgUnitHasBeenSelected( orgUnitIds )
+{
+
+}
+selection.setListenerFunction();
+*/
+
+    function formValidations()
+    {
+        /*
+
+        var dataSetId = $( '#dataSetId' ).val();
+        var optionSetId = $( '#optionSetId' ).val();
+        var dataElementId = $( '#dataElementId' ).val();
+		var periodId = $( '#periodId' ).val();
+
+        if ( dataSetId == "-1" )
+        {
+            showWarningMessage( "Please Select DataSet" );
+
+            return false;
+        }
+
+        else if( optionSetId == "-1" )
+        {
+            showWarningMessage( "Please Select Partner" );
+            return false;
+        }
+
+        else if( dataElementId == "-1" )
+        {
+            showWarningMessage( "Please Select DataElement" );
+            return false;
+        }
+		*/
+		if( $("#startDate").val() == null ||  $("#startDate").val().equals("") )
+        {
+            showWarningMessage( "Please Select Start Date" );
+            return false;
+        }
+        else if( $("#endDate").val() == null || $("#endDate").val().equals("") )
+        {
+            showWarningMessage( "Please Select End Date" );
+            return false;
+        }
+
+        return true;
+    }
+
+    function dialogWindowClose()
+    {
+        jQuery('#addNewPeriod').dialog('destroy').remove();
+    }
+
+</script>
+
+<script type="text/javascript">
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'addPartnerForm';
+        isSubmit = true;
+        jQuery("#addPartnerForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+                            //addPartner();
+							validateAddPartner();
+                        }
+                    }
+            });
+    }); 
+    
+	
+	
+</script>
+
+<h3>$i18n.getString( "partner_management" )</h3>
+
+<form id="addPartnerForm" name="addPartnerForm" method="post" >
+    <table>
+        <tr>
+            <td><label for="dataSetId">$i18n.getString( "dataSet" )</label></td>
+         <!--   <select id="dataSetId" name="dataSetId" style="width:220px" onchange="loadDataElementAndPeriod()" >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $dataSet in $dataSets )
+                    <option value="$dataSet.id">$encoder.htmlEncode( $dataSet.name )</option>
+                #end
+            </select> -->
+            <td><input type="hidden" id="dataSetId" name="dataSetId" value="$dataSet.id">$dataSet.name</td>
+        </tr>
+
+        <tr>
+            <td><label for="partner">$i18n.getString( "partner" )</label></td>
+           
+               <!-- <select id="optionSetId" name="optionSetId" style="width:220px" >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $option in $options )
+                    <option value="$option.id">$encoder.htmlEncode( $option.name )</option>
+                #end
+            </select> -->
+            <td><input type="hidden" id="optionSetId" name="optionSetId" value="$option.id">$option.name</td>
+            
+        </tr>
+
+        <tr>
+            <td><label>$i18n.getString( "dataElement" )</label></td>
+            
+              <!--  <select id="dataElementId" name = "dataElementId" style="width:220px" >
+                    <option value="-1">[$i18n.getString( "select" )]</option>
+                </select> -->
+			  <td><input type="hidden"  id="dataElementId" name="dataElementId" value="$dataElement.id">$dataElement.name</td>
+            
+        </tr>
+        <!--
+	<tr>
+		<td><label>$i18n.getString( "period" )</label></td>
+		<td>
+			<select id="periodId" name = "periodId" style="width:220px" >
+				<option value="-1">[$i18n.getString( "select" )]</option>
+			</select>
+		</td>
+    </tr>-->
+
+        <tr >
+            <td style="width:40%;">Start Date <em title="$i18n.getString( 'required' )" class="required">*</em></td>
+            <td style="width:60%;"><input type="text" id="startDate" style="width:100%;" name = "startDate" class="{validate:{required:true}}" />
+                <script type="text/javascript">
+                    datePicker( 'startDate' );
+                </script>
+            </td>
+        </tr>
+
+        <tr >
+            <td style="width:40%;">End Date <em title="$i18n.getString( 'required' )" class="required">*</em></td>
+            <td style="width:60%;"><input type="text" id="endDate" style="width:100%;" name = "endDate" class="{validate:{required:true}}" />
+                <script type="text/javascript">
+                    datePicker( 'endDate' );
+                </script>
+            </td>
+        </tr>
+
+    </table>
+	
+	<!--<div id="selectionTree" style="width:328px; height:200px; overflow:auto; border:1px solid #ccc; margin-bottom: 8px;"></div>-->
+	
+    <table id="selectionTable">
+        
+		<tr>
+            <td>
+                #organisationUnitSelectionTree( false, true, false )
+            </td>
+        </tr>
+		
+        <tr>
+            <td>
+                <input type="submit" id="saveButton" value="$i18n.getString( 'save' )"  style="width:10em"/>
+                <input type="button" id="cancelButton" value="$i18n.getString( 'cancel' )" onclick="closePopUpWindow();" style="width:10em"/>
+            </td>
+        </tr>
+    </table>
+
+</form>

@@ -1,0 +1,64 @@
+<script type="text/javascript">
+    jQuery(document).ready(function(){	
+		tableSorter( 'listTable' );	
+	});
+    
+</script>
+#if( $partnerDateList.size() > 0 )	
+<table class="mainPageTable">
+	<tr>
+		<td>
+			<table class="listTable" id="listTable"> 
+				<colgroup>
+					<col width="30"/>
+					<col />
+					<col />
+					<col/>
+					<col width="250"/>
+				</colgroup>   
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>$i18n.getString( "start_date" )</th>
+						<th>$i18n.getString( "end_date" )</th>
+						<th>$i18n.getString( "# of Facilities" )</th> 
+						<th class="{sorter: false}" style="text-align:left">$i18n.getString( "operations" )</th>
+					</tr>
+				</thead>
+				<tbody id="list">   
+					#set( $count=1 )
+					#set( $mark = false )
+					
+					#foreach( $partnerDate in $partnerDateList )
+						
+						<tr #alternate($mark) id="tr${partnerDate}">
+							<td>
+								$count
+							</td>
+							
+							#set($partnerStartDate = $!partnerDate.split(":")[0])
+							#set($partnerEndDate = $!partnerDate.split(":")[1])
+							
+							#set( $mapKey = $dataSetId + ":" + $dataElementId + ":" + $optionSetId + ":" + $!partnerDate.split(":")[0] + ":" + $!partnerDate.split(":")[1] )
+							
+							<td>$partnerStartDate</td>
+							<td>$partnerEndDate</td>
+							<td>$!partnerOrgUnitCountMap.get( $mapKey )</td>
+						
+							<td>
+								<a href="javascript:showUpdatePartnerForm( '$dataSetId', '$dataElementId', '$optionSetId', '$partnerStartDate', '$partnerEndDate'  )" title='$i18n.getString( "edit" )'><img src="../images/edit.png" alt='$i18n.getString( "edit" )'></a>
+								<a href="javascript:removePartner( '$dataSetId', '$dataElementId', '$optionSetId', '$partnerStartDate', '$partnerEndDate' )" title='$i18n.getString( "remove" )'><img src="images/deleteRed.png" alt='$i18n.getString( "remove" )'></a>
+							</td>                               
+						</tr>
+						#set( $mark = !$mark)
+						#set($count = $count + 1)
+					#end
+				</tbody>
+			</table>
+		</td>
+	</tr>
+</table>
+
+#else
+	No Record Exits
+#end

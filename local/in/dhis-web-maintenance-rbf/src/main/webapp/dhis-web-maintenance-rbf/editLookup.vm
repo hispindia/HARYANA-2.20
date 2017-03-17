@@ -1,0 +1,72 @@
+<script type="text/javascript" src="javascript/editLookup.js"></script>
+<script>
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'editLookupForm';
+        isSubmit = true;
+        
+        jQuery("#editLookupForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+                            editLookup();
+                        }
+                    }
+            });
+    }); 
+    
+</script>
+
+<h3>$i18n.getString( "edit_lookup" )</h3>
+
+<form id="editLookupForm" name="editLookupForm" action="updateLookup.action" method="post" class="inputForm">
+  <input type="hidden" id="lookupId" name="lookupId" value="$lookup.id"/>
+
+  <table style="width: 600px">
+    <col style="width: 400px"/>
+    <col>
+    <thead>
+      <tr>
+        <th colspan="2">$i18n.getString( "lookup_details" )</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label>$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="name" name="name" value="$!encoder.htmlEncode( $lookup.name )" class="{validate:{required:true}}"/></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "code" )</label></td>
+        <td><input type="text" id="code" name="code" value="$!encoder.htmlEncode( $lookup.code )"/></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "description" )</label></td>
+        <td><textarea id="description" name="description">$!encoder.htmlEncode( $lookup.description )</textarea></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="type" name="type" value="$!encoder.htmlEncode( $lookup.type )" class="{validate:{required:true}}"/></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "value" )</label></td>
+        <td><input type="text" id="value" name="value" value="$!encoder.htmlEncode( $lookup.value )"/></td>
+      </tr>
+      
+      <tr>
+        <td colspan="3">
+          <input type="submit" value="$i18n.getString( 'save' )" style="width:120px" />
+          <input type="button" onclick="dhis2.commons.redirectCurrentPage( 'getAllLookups.action' )" value="$i18n.getString( 'cancel' )" style="width:120px" />
+        </td>
+      </tr>
+      
+    </tbody>
+  </table>
+</form>

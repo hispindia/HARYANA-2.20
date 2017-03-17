@@ -1,0 +1,93 @@
+
+<script type="text/javascript" >
+
+$( document ).ready( function() {
+	//datePickerInRange( 'startDate' , 'endDate' );
+	datePicker( 'startDate');
+	datePicker( 'endDate');
+	
+} );
+
+function validateAddTariff()
+{
+	if($("#pbfType ").val() != '-1' && $("#tariff").val() != "" && $("#startDate").val() != "" && $("#endDate").val() != "")
+    {
+		$( '#saveAddTariffButton' ).removeAttr( 'disabled' );
+    }
+    else
+    {
+		document.getElementById( "saveAddTariffButton" ).disabled = true;
+		
+    }
+}
+	
+</script>
+
+<table style="width:100%;table-layout:fixed;">
+	<tr >
+		<td style="width:40%;">PBF Type <b class="mandatory">*</b> </td>
+		<td style="width:60%;">
+			<select id="pbfType" style="width:100%;" name = "pbfType" onblur="validateAddTariff()" disabled="disabled" >
+				<option value="-1">Select PBF Type</option>
+				#foreach( $dataSet in $dataSets )
+					<option value="$dataSet.id" #if( $dataSet.id == $tariffDataValue.getDataSet().getId() ) selected="selected" #end >$dataSet.name</option>
+				#end
+            </select>
+		</td>
+    </tr>
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>
+	<tr >
+		<td style="width:40%;">Start Date <b class="mandatory">*</b> </td>
+		<td style="width:60%;"><input type="text" id="startDate" style="width:100%;" value="$tariffStartDate" name = "startDate" onblur="validateAddTariff()" disabled="disabled" />
+			
+		</td>
+    </tr>
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>
+	<tr >
+		<td style="width:40%;">End Date <b class="mandatory">*</b> </td>
+		<td style="width:60%;"><input type="text" id="endDate" style="width:100%;" value="$tariffEndDate" name = "endDate" onblur="validateAddTariff()"  disabled="disabled" />
+
+		</td>
+    </tr>
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>
+	<tr >
+		<td style="width:40%;">Tariff <b class="mandatory">*</b> </td>
+		<td style="width:60%;"><input type="text" id="tariff" style="width:100%;" value="$tariffDataValue.getValue()"  name = "tariff" onblur="validateAddTariff()" /></td>
+    </tr>
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>
+	<tr >
+		<td style="width:40%;">Target  </td>
+		<td style="width:60%;"><input type="text" id="target" style="width:100%;"  name = "target" value="$!tariffDataValue.getTarget()" /></td>
+    </tr>
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>
+	<tr >
+		<td style="width:40%;">Target % </td>
+		<td style="width:60%;"><input type="text" id="targetPercentage" name = "targetPercentage" value="$!tariffDataValue.getTargetPercentage()" style="width:100%;" /></td>
+    </tr>
+	
+	<tr >
+		<td colspan="2">&nbsp;</td>
+    </tr>	
+
+	<tr >
+       	<td>&nbsp;</td>
+        <td>
+        	<input type="button"  id="saveAddTariffButton" value="$i18n.getString( 'Save' )" style="width:75px" onclick="validateTariff();"/>&nbsp;&nbsp;
+        	&nbsp;&nbsp;<input type="button" id="cancelAddTariffButton" value="$i18n.getString( 'Cancel' )" onclick="dialogWindowClose();" style="width:75px"/>
+		</td>
+    </tr>	
+
+</table>
+<script type="text/javascript" >
+	validateAddTariff();
+</script>	

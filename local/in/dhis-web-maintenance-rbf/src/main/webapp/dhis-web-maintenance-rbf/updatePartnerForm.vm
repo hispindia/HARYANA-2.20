@@ -1,0 +1,87 @@
+## Macro for generating the jQuery validation rules
+#macro( validate $type $require )
+  #if( $type == "NUMBER" )
+    {validate:{ number:true #if($require), required:true #end }}
+  #elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+
+<script type="text/javascript">
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'updatePartnerForm';
+        isSubmit = true;
+        jQuery("#updatePartnerForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+                            //updatePartner();
+							validateUpdatePartner();
+                        }
+                    }
+            });
+    }); 
+    
+</script>
+
+<h3>$i18n.getString( "partner_management" )</h3>
+
+<form id="updatePartnerForm" name="updatePartnerForm"  method="post">
+    <table>
+        <tr>
+            <td><label for="dataSetId">$i18n.getString( "dataSet" )</label></td>
+            <td><input type="hidden" id="dataSetId" name="dataSetId" value="$dataSet.id">$dataSet.name</td>
+        </tr>
+
+        <tr>
+            <td><label for="partner">$i18n.getString( "partner" )</label></td>
+            <td><input type="hidden" id="optionSetId" name="optionSetId" value="$option.id">$option.name</td>
+            
+        </tr>
+
+        <tr>
+            <td><label>$i18n.getString( "dataElement" )</label></td>
+			<td><input type="hidden"  id="dataElementId" name="dataElementId" value="$dataElement.id">$dataElement.name</td>
+            
+        </tr>
+        <tr>
+            <td style="width:40%;">Start Date <em title="$i18n.getString( 'required' )" class="required">*</em></td>
+            <td style="width:60%;"><input type="text" id="startDate" style="width:100%;" name = "startDate" class="{validate:{required:true}}" value="$startDate" />
+                <script type="text/javascript">
+                    datePicker( 'startDate' );
+                </script>
+            </td>
+        </tr>
+
+        <tr >
+            <td style="width:40%;">End Date <em title="$i18n.getString( 'required' )" class="required">*</em></td>
+            <td style="width:60%;"><input type="text" id="endDate" style="width:100%;" name = "endDate" class="{validate:{required:true}}" value="$endDate" />
+                <script type="text/javascript">
+                    datePicker( 'endDate' );
+                </script>
+            </td>
+        </tr>
+
+    </table>
+	
+	<!--<div id="selectionTree" style="width:328px; height:200px; overflow:auto; border:1px solid #ccc; margin-bottom: 8px;"></div>-->
+    <table id="selectionTable">
+        <tr>
+            <td>
+                #organisationUnitSelectionTree( false, true, false )
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" id="saveButton" value="$i18n.getString( 'save' )"  style="width:10em"/>
+                <input type="button" id="cancelButton" value="$i18n.getString( 'cancel' )" onclick="closePopUpWindow();" style="width:10em"/>
+            </td>
+        </tr>
+    </table>
+
+</form>

@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	   http://www.springframework.org/schema/task
+	   http://www.springframework.org/schema/task/spring-task.xsd
+	   http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+	   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+	   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	   
+
+   <!--  for RunAggregation Query By Scheduler -->
+   	<task:scheduled-tasks scheduler="aggregationScheduler">
+        <task:scheduled ref="org.hisp.dhis.rbf.scheduler.RunAggregationQueryActionByScheduler" method="execute" cron="0 0 23 * * ?"/>
+   	</task:scheduled-tasks>
+
+	<task:scheduler id="aggregationScheduler" pool-size="1"/>
+
+    <bean id="org.hisp.dhis.rbf.scheduler.RunAggregationQueryActionByScheduler"
+        class="org.hisp.dhis.rbf.scheduler.RunAggregationQueryActionByScheduler"
+        scope="prototype">
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+       	<property name="defaultPBFAggregationService" ref="org.hisp.dhis.rbf.impl.DefaultPBFAggregationService" />
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <!--  PBF API -->
+    
+    <bean id="org.hisp.dhis.rbf.api.TariffDataValueStore" class="org.hisp.dhis.rbf.impl.HibernateTariffDataValueStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+	<bean id="org.hisp.dhis.rbf.api.QualityMaxValueStore" class="org.hisp.dhis.rbf.impl.HibernateQualityMaxValueStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.PBFDataValueStore" class="org.hisp.dhis.rbf.impl.HibernatePBFDataValueStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="periodStore" ref="org.hisp.dhis.period.PeriodStore" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.api.TariffDataValueService" class="org.hisp.dhis.rbf.impl.DefaultTariffDataValueService">
+        <property name="tariffDataValueStore" ref="org.hisp.dhis.rbf.api.TariffDataValueStore" />
+    </bean>
+
+	<bean id="org.hisp.dhis.rbf.api.QualityMaxValueService" class="org.hisp.dhis.rbf.impl.DefaultQualityMaxValueService">
+        <property name="qualityMaxValueStore" ref="org.hisp.dhis.rbf.api.QualityMaxValueStore" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.PBFDataValueService" class="org.hisp.dhis.rbf.impl.DefaultPBFDataValueService">
+        <property name="pbfDataValueStore" ref="org.hisp.dhis.rbf.api.PBFDataValueStore" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.LookupStore" class="org.hisp.dhis.rbf.impl.HibernateLookupStore">
+        <property name="clazz" value="org.hisp.dhis.rbf.api.Lookup"/>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.api.LookupService" class="org.hisp.dhis.rbf.impl.DefaultLookupService">
+        <property name="lookupStore" ref="org.hisp.dhis.rbf.api.LookupStore" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.BankDetailsStore" class="org.hisp.dhis.rbf.impl.HibernateBankDetailsStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.BankDetailsService" class="org.hisp.dhis.rbf.impl.DefaultBankDetailsService">
+        <property name="bankDetailsStore" ref="org.hisp.dhis.rbf.api.BankDetailsStore" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.api.QualityScorePaymentStore" class="org.hisp.dhis.rbf.impl.HibernateQualityScorePaymentStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.api.QualityScorePaymentService" class="org.hisp.dhis.rbf.impl.DefaultQualityScorePaymentService">
+        <property name="qualityScorePaymentStore" ref="org.hisp.dhis.rbf.api.QualityScorePaymentStore" />
+    </bean>
+    
+    
+    <!--  UtilizationRateStore -->
+    <bean id="org.hisp.dhis.rbf.api.UtilizationRateStore" class="org.hisp.dhis.rbf.impl.HibernateUtilizationRateStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+	
+	<!--  UtilizationRateService -->
+    <bean id="org.hisp.dhis.rbf.api.UtilizationRateService" class="org.hisp.dhis.rbf.impl.DefaultUtilizationRateService">
+        <property name="utilizationRateStore" ref="org.hisp.dhis.rbf.api.UtilizationRateStore" />
+    </bean>    
+    
+    
+    <!--  PartnerStore -->
+    <bean id="org.hisp.dhis.rbf.api.PartnerStore" class="org.hisp.dhis.rbf.impl.HibernatePartnerStore">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>    
+    
+	<!--  PartnerService -->
+    <bean id="org.hisp.dhis.rbf.api.PartnerService" class="org.hisp.dhis.rbf.impl.DefaultPartnerService">
+        <property name="partnerStore" ref="org.hisp.dhis.rbf.api.PartnerStore" />
+    </bean>     
+    
+   
+	<!-- Home page -->
+	<bean id="org.hisp.dhis.rbf.action.NoAction" class="org.hisp.dhis.rbf.action.NoAction" scope="prototype">
+    </bean>
+	
+	<!-- Data Element for Tariff -->
+	<bean id="org.hisp.dhis.rbf.action.GetDataElementforTariffAction" class="org.hisp.dhis.rbf.action.GetDataElementforTariffAction" scope="prototype">
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+    </bean>
+    
+    <!-- Get Tariff Data -->
+    <bean id="org.hisp.dhis.rbf.action.LoadTariffDetailsAction" class="org.hisp.dhis.rbf.action.LoadTariffDetailsAction" scope="prototype">
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService" />	
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+    </bean>
+    
+    
+    <!-- Add tariff details form -->
+    <bean id="org.hisp.dhis.rbf.action.ShowAddTariffDetailsFormAction" class="org.hisp.dhis.rbf.action.ShowAddTariffDetailsFormAction" scope="prototype">
+    </bean>   
+    
+     <!-- Add tariff details form -->
+    <bean id="org.hisp.dhis.rbf.action.ShowUpdateTariffDetailsFormAction" class="org.hisp.dhis.rbf.action.ShowUpdateTariffDetailsFormAction" scope="prototype">
+    
+    </bean>    
+    
+    <!-- Add Tariff -->
+	<bean id="org.hisp.dhis.rbf.action.AddTariffDataAction" class="org.hisp.dhis.rbf.action.AddTariffDataAction" scope="prototype">
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+    </bean>
+    
+    <!-- Delete Tariff -->
+    <bean id="org.hisp.dhis.rbf.action.DeleteTariffDataAction" class="org.hisp.dhis.rbf.action.DeleteTariffDataAction" scope="prototype">
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>
+    
+    <!-- Validate Tariff  -->
+    <bean id="org.hisp.dhis.rbf.action.ValidateTariffDataAction" class="org.hisp.dhis.rbf.action.ValidateTariffDataAction" scope="prototype">
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+    </bean>
+
+    <!-- Load Bank Details -->
+    <bean id="org.hisp.dhis.rbf.action.LoadBankDetailsAction" class="org.hisp.dhis.rbf.action.LoadBankDetailsAction" scope="prototype">
+        <property name="bankDetailsService" ref="org.hisp.dhis.rbf.api.BankDetailsService" />   
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <!--<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />-->
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+    </bean>
+    
+    <!-- Add Bank Detail -->
+	<bean id="org.hisp.dhis.rbf.action.AddBankDataAction" class="org.hisp.dhis.rbf.action.AddBankDataAction" scope="prototype">
+		<property name="bankDetailsService" ref="org.hisp.dhis.rbf.api.BankDetailsService" />		
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<!--<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />-->		
+    </bean>
+    
+    <!-- Add Bank Detail -->
+	<bean id="org.hisp.dhis.rbf.action.DeleteBankDataAction" class="org.hisp.dhis.rbf.action.DeleteBankDataAction" scope="prototype">
+		<property name="bankDetailsService" ref="org.hisp.dhis.rbf.api.BankDetailsService" />		
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<!--<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />-->		
+    </bean>
+    
+    
+<!--  PBF Data Entry -->
+
+	<bean id="org.hisp.dhis.rbf.dataentry.PageInitAction" class="org.hisp.dhis.rbf.dataentry.PageInitAction" scope="prototype">
+		<property name="selectionManager" ref="org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager" />	
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>    
+    
+  	<!-- Get OrganisationUnit Unit name -->
+    <bean id="org.hisp.dhis.rbf.dataentry.GetOrganisationUnitAction" class="org.hisp.dhis.rbf.dataentry.GetOrganisationUnitAction" scope="prototype">
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean> 
+ 
+	<!-- Get Periods -->
+	 <bean id="org.hisp.dhis.rbf.dataentry.LoadPeriodsAction" class="org.hisp.dhis.rbf.dataentry.LoadPeriodsAction" scope="prototype">   
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService"/>
+	 </bean>		
+	
+	<!-- Get Next and Previous Periods -->
+	 <bean id="org.hisp.dhis.rbf.dataentry.LoadNextPrePeriodsAction" class="org.hisp.dhis.rbf.dataentry.LoadNextPrePeriodsAction" scope="prototype">   
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService"/>
+	 </bean>	 
+    
+	<!-- Load DataEntry Form -->
+	 <bean id="org.hisp.dhis.rbf.dataentry.LoadDataEntryFormAction" class="org.hisp.dhis.rbf.dataentry.LoadDataEntryFormAction" scope="prototype">   
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService"/>
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService"/>
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />		
+		<property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService"/>
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService"/>
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService"/>
+		<property name="pbfDataValueService" ref="org.hisp.dhis.rbf.api.PBFDataValueService" />
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+		<property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+		<property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
+	 </bean>    
+    
+    <!-- Save Value -->
+    
+    <bean id="org.hisp.dhis.rbf.dataentry.SaveValueAction"  class="org.hisp.dhis.rbf.dataentry.SaveValueAction" scope="prototype">
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+		<property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="pbfDataValueService" ref="org.hisp.dhis.rbf.api.PBFDataValueService" />			
+	</bean>
+
+
+    <!-- Save Value In DataValue-->
+    
+    <bean id="org.hisp.dhis.rbf.dataentry.SaveValueInDataValueAction"  class="org.hisp.dhis.rbf.dataentry.SaveValueInDataValueAction" scope="prototype">
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+		<property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+	</bean>
+
+
+
+
+
+
+
+
+    
+    <!-- Quality Max Data Entry -->
+    
+    <bean id="org.hisp.dhis.rbf.quality.dataentry.ValidateQualityMaxDataAction" class="org.hisp.dhis.rbf.quality.dataentry.ValidateQualityMaxDataAction" scope="prototype">
+        <property name="qualityMaxValueService" ref="org.hisp.dhis.rbf.api.QualityMaxValueService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.quality.dataentry.GetOrganisationUnitForMaxAction" class="org.hisp.dhis.rbf.quality.dataentry.GetOrganisationUnitForMaxAction" scope="prototype">
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.quality.dataentry.QualityMaxInitAction"  class="org.hisp.dhis.rbf.quality.dataentry.QualityMaxInitAction" scope="prototype">
+		<property name="selectionManager" ref="org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager" />	
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />	
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />		
+	</bean>
+	
+	<bean id="org.hisp.dhis.rbf.quality.dataentry.LoadQualityMaxDetailsAction"  class="org.hisp.dhis.rbf.quality.dataentry.LoadQualityMaxDetailsAction" scope="prototype">
+		<property name="qualityMaxValueService" ref="org.hisp.dhis.rbf.api.QualityMaxValueService" />	
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />	
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+		<property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />	
+	</bean>
+	
+    <!-- Save Quality Data -->
+    
+    <bean id="org.hisp.dhis.rbf.quality.dataentry.SaveQualityValueAction"  class="org.hisp.dhis.rbf.quality.dataentry.SaveQualityValueAction" scope="prototype">
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />		
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="qualityMaxValueService" ref="org.hisp.dhis.rbf.api.QualityMaxValueService" />			
+	</bean>
+	
+	<!-- Quality Score Data Entry -->
+	
+	<bean id="org.hisp.dhis.rbf.quality.dataentry.GetOrganisationUnitForScoreAction" class="org.hisp.dhis.rbf.quality.dataentry.GetOrganisationUnitForScoreAction" scope="prototype">
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>
+    
+     <bean id="org.hisp.dhis.rbf.quality.dataentry.QualityScoreInitAction"  class="org.hisp.dhis.rbf.quality.dataentry.QualityScoreInitAction" scope="prototype">
+		<property name="selectionManager" ref="org.hisp.dhis.ouwt.manager.OrganisationUnitSelectionManager" />	
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />	
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />		
+	</bean>
+	
+	<bean id="org.hisp.dhis.rbf.quality.dataentry.LoadQualityScoreDetailsAction"  class="org.hisp.dhis.rbf.quality.dataentry.LoadQualityScoreDetailsAction" scope="prototype">
+		<property name="qualityMaxValueService" ref="org.hisp.dhis.rbf.api.QualityMaxValueService" />	
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />	
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+		<property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+		<property name="i18nService" ref="org.hisp.dhis.i18n.I18nService" />
+	</bean>
+	
+	
+	<bean id="org.hisp.dhis.rbf.quality.dataentry.LoadQualityMaxScoreAction"  class="org.hisp.dhis.rbf.quality.dataentry.LoadQualityMaxScoreAction" scope="prototype">
+		<property name="qualityMaxValueService" ref="org.hisp.dhis.rbf.api.QualityMaxValueService" />	
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+	</bean>	
+	
+	
+	<!-- Payment Adjustment -->
+	
+	<bean id="org.hisp.dhis.rbf.payment.action.GetOrganisationUnitForPaymentAction" class="org.hisp.dhis.rbf.payment.action.GetOrganisationUnitForPaymentAction" scope="prototype">
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>
+	
+	<bean id="org.hisp.dhis.rbf.payment.action.GetPaymentAdjustmentDetailsAction"  class="org.hisp.dhis.rbf.payment.action.GetPaymentAdjustmentDetailsAction" scope="prototype">
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+		<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />        	
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />		
+	</bean>
+	
+	<bean id="org.hisp.dhis.rbf.payment.action.LoadPaymentAdjustmentDetailsAction"  class="org.hisp.dhis.rbf.payment.action.LoadPaymentAdjustmentDetailsAction" scope="prototype">
+		<property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+		<property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+		<property name="tariffDataValueService" ref="org.hisp.dhis.rbf.api.TariffDataValueService" />
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+	</bean>
+
+    <bean id="org.hisp.dhis.rbf.payment.action.LoadPaymentAdjustmentAction"  class="org.hisp.dhis.rbf.payment.action.LoadPaymentAdjustmentAction" scope="prototype">
+    </bean>
+	
+	<!-- Save Quality Data -->
+	
+	<bean id="org.hisp.dhis.rbf.quality.dataentry.SaveDataValueAction"  class="org.hisp.dhis.rbf.quality.dataentry.SaveDataValueAction" scope="prototype">
+		<property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />	
+		<property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+		<property name="dataValueService" ref="org.hisp.dhis.datavalue.DataValueService" />
+		<property name="categoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+		<property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />		
+	</bean>
+
+    <!--  Aggregation Engine -->
+     <bean id="org.hisp.dhis.rbf.aggregation.action.AggregationQueryListAction"
+        class="org.hisp.dhis.rbf.aggregation.action.AggregationQueryListAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.aggregation.action.AddAggregationQueryFormAction"
+        class="org.hisp.dhis.rbf.aggregation.action.AddAggregationQueryFormAction"
+        scope="prototype">
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+    </bean> 
+
+    <bean id="org.hisp.dhis.rbf.aggregation.action.AddAggregationQueryAction"
+        class="org.hisp.dhis.rbf.aggregation.action.AddAggregationQueryAction"
+        scope="prototype">
+        <!--<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />-->
+        <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+        <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+    </bean> 
+      
+    <bean id="org.hisp.dhis.rbf.aggregation.action.GetAggregationParameterAction"
+        class="org.hisp.dhis.rbf.aggregation.action.GetAggregationParameterAction"
+        scope="prototype">
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+    </bean>
+
+	<bean id="org.hisp.dhis.rbf.aggregation.action.RunAggregationQueryFormAction"
+        class="org.hisp.dhis.rbf.aggregation.action.RunAggregationQueryFormAction"
+        scope="prototype">
+    </bean>
+
+
+    <bean id="org.hisp.dhis.rbf.aggregation.action.RunAggregationQueryAction"
+        class="org.hisp.dhis.rbf.aggregation.action.RunAggregationQueryAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+        <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+        <!--<property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />-->
+        <property name="selectionTreeManager" ref="org.hisp.dhis.oust.manager.SelectionTreeManager" />
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="dataSetService" ref="org.hisp.dhis.dataset.DataSetService" />
+        <property name="defaultPBFAggregationService" ref="org.hisp.dhis.rbf.impl.DefaultPBFAggregationService" />
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+    </bean>
+
+    <bean id="org.hisp.dhis.rbf.impl.DefaultPBFAggregationService"
+        class="org.hisp.dhis.rbf.impl.DefaultPBFAggregationService"
+        scope="prototype">
+        <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+        <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />                
+        <!--<property name="periodService" ref="org.hisp.dhis.period.PeriodService" />-->
+        <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />        
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+	
+    <!-- Show Update  Aggregation Query Form -->
+    <bean id="org.hisp.dhis.rbf.aggregation.action.ShowUpdateAggregationQueryFormAction"
+        class="org.hisp.dhis.rbf.aggregation.action.ShowUpdateAggregationQueryFormAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+        <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+    </bean>
+    
+    <!--  Update  Aggregation Query -->
+    <bean id="org.hisp.dhis.rbf.aggregation.action.UpdateAggregationQueryAction"
+        class="org.hisp.dhis.rbf.aggregation.action.UpdateAggregationQueryAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+        <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+        <property name="dataElementCategoryService" ref="org.hisp.dhis.dataelement.DataElementCategoryService" />
+    </bean> 	
+	
+    <!--  Remove/Delete Aggregation -->
+	<bean id="org.hisp.dhis.rbf.aggregation.action.RemoveAggregationQueryAction"
+        class="org.hisp.dhis.rbf.aggregation.action.RemoveAggregationQueryAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+    </bean> 	
+	
+    <!--  Show/Get Aggregation Details -->
+	<bean id="org.hisp.dhis.rbf.aggregation.action.GetAggregationQueryAction"
+        class="org.hisp.dhis.rbf.aggregation.action.GetAggregationQueryAction"
+        scope="prototype">
+        <property name="aggregationConditionService" ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService" />
+    </bean>
+	
+
+
+	<!-- Quality Score Payment -->
+
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.GetQualityScorePaymentList"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.GetQualityScorePaymentList"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+
+	 <!-- Add Quality Score Payment Form -->
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.AddQualityScorePaymentFormAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.AddQualityScorePaymentFormAction"
+        scope="prototype">
+    </bean>
+
+	<!-- Add Quality Score Payment -->
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.AddQualityScorePaymentAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.AddQualityScorePaymentAction"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+
+
+	<!-- Update Quality Score Payment Form -->
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.UpdateQualityScorePaymentFormAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.UpdateQualityScorePaymentFormAction"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+
+	<!-- Update Quality Score Payment -->
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.UpdateQualityScorePaymentAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.UpdateQualityScorePaymentAction"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+    
+    
+	<!-- Delete Quality Score Payment --> 
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.DeleteQualityScorePaymentAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.DeleteQualityScorePaymentAction"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+
+
+	<!-- Show Details -->
+	<bean id="org.hisp.dhis.rbf.qualityscorepayment.action.GetQualityScorePaymentAction"
+        class="org.hisp.dhis.rbf.qualityscorepayment.action.GetQualityScorePaymentAction"
+        scope="prototype">
+        <property name="qualityScorePaymentService" ref="org.hisp.dhis.rbf.api.QualityScorePaymentService" />      
+    </bean>
+
+
+
+	 <!-- Get All Lookups -->
+    
+	<bean id="org.hisp.dhis.rbf.lookup.action.GetAllLookupsAction"
+        class="org.hisp.dhis.rbf.lookup.action.GetAllLookupsAction"
+        scope="prototype">
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />      
+    </bean>
+    
+    <!-- Add Lookup -->  
+    <bean id="org.hisp.dhis.rbf.lookup.action.AddLookupAction"
+        class="org.hisp.dhis.rbf.lookup.action.AddLookupAction"
+        scope="prototype">
+        <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />        
+    </bean>
+    
+    <!-- Delete Lookup -->
+    
+    <bean id="org.hisp.dhis.rbf.lookup.action.DelLookup" class="org.hisp.dhis.rbf.lookup.action.DelLookup" scope="prototype">
+    	<property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+    </bean>
+     
+    <!-- Edit Lookup --> 
+    
+	<bean id="org.hisp.dhis.rbf.lookup.action.EditLookupFormAction" class="org.hisp.dhis.rbf.lookup.action.EditLookupFormAction"
+	   scope="prototype">
+	   <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+	</bean>
+    
+    <!-- Update Lookup -->
+	<bean id="org.hisp.dhis.rbf.lookup.action.UpdateLookupAction" class="org.hisp.dhis.rbf.lookup.action.UpdateLookupAction"
+	    scope="prototype">
+	    <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+	</bean>
+	
+	<!-- Get Lookup(Show Details) -->	
+	
+	<bean id="org.hisp.dhis.rbf.lookup.action.GetLookupAction" class="org.hisp.dhis.rbf.lookup.action.GetLookupAction"
+	    scope="prototype">
+	    <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+	</bean>
+	
+	<!-- Validate Lookup -->
+	
+	<bean id="org.hisp.dhis.rbf.lookup.action.ValidateLookupAction" class="org.hisp.dhis.rbf.lookup.action.ValidateLookupAction"
+	    scope="prototype">
+	    <property name="lookupService" ref="org.hisp.dhis.rbf.api.LookupService" />
+	</bean>
+	
+
+
+	<!-- Utilization Rule Management -->
+    
+    <!-- Get DataElement List -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.GetUtilizationRuleDataElementListAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.GetUtilizationRuleDataElementListAction"
+	    scope="prototype">
+	    <property name="dataElementtService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	    <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+	</bean>	
+
+    <!-- Add Utilization form -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.ShowAddUtilizationRateFormAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.ShowAddUtilizationRateFormAction"
+	    scope="prototype">
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	</bean>
+
+   <!-- Utilization Rule List -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.GetUtilizationRateListAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.GetUtilizationRateListAction"
+	    scope="prototype">
+	    <property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	</bean>
+    
+   <!-- Add Utilization -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.AddUtilizationRateAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.AddUtilizationRateAction"
+	    scope="prototype">
+	    <property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+	</bean>
+
+    <!-- Update Utilization form -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.ShowUpdateUtilizationRateFormAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.ShowUpdateUtilizationRateFormAction"
+	    scope="prototype">
+	    <property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	</bean>
+
+
+   <!-- Upadte Utilization -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.UpdateUtilizationRateAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.UpdateUtilizationRateAction"
+	    scope="prototype">
+	    <property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	    <property name="currentUserService" ref="org.hisp.dhis.user.CurrentUserService" />
+	</bean>
+
+   <!-- Remove Utilization -->
+	<bean id="org.hisp.dhis.rbf.utilizationRuleManagement.action.RemoveUtilizationRateAction" class="org.hisp.dhis.rbf.utilizationRuleManagement.action.RemoveUtilizationRateAction"
+	    scope="prototype">
+	    <property name="utilizationRateService" ref="org.hisp.dhis.rbf.api.UtilizationRateService" />
+	    <property name="dataElementService" ref="org.hisp.dhis.dataelement.DataElementService" />
+	</bean>
+	
+	
+    <!-- Reports Management -->
+    
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.ReportsHomePageAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.ReportsHomePageAction"
+        scope="prototype">
+    </bean>
+        
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.ReportsListAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.ReportsListAction"
+        scope="prototype">
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService">
+        </property>
+    </bean>
+    
+    <!-- Report Management Addition -->
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.AddReportFormAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.AddReportFormAction"
+        scope="prototype">
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+    </bean>
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.AddReportAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.AddReportAction"
+        scope="prototype">
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService" />
+        <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+    </bean>
+    
+    <!-- Report Management Editing/Updation -->
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.UpdateReportForm"
+        class="org.hisp.dhis.rbf.reportmanagement.action.UpdateReportForm"
+        scope="prototype">
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService" />
+        <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+    </bean>
+    
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.UpdateReportAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.UpdateReportAction"
+        scope="prototype">
+        <property name="periodService" ref="org.hisp.dhis.period.PeriodService" />
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService" />
+        <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+    </bean>
+    
+    <!-- Report Validation during Addition or Updation of Report -->
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.ValidateReportAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.ValidateReportAction"
+        scope="prototype">
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService" />
+        
+    </bean>
+    
+    <!-- Get Report details -->
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.GetReportAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.GetReportAction"
+        scope="prototype">
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService">
+        </property>
+    </bean>
+    
+	 <!-- Report Association -->
+    <bean
+        id="org.hisp.dhis.rbf.reportmanagement.action.SetupAssociationsTreeAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.SetupAssociationsTreeAction"
+        scope="prototype">
+        <property name="selectionTreeManager"
+            ref="org.hisp.dhis.oust.manager.SelectionTreeManager">
+        </property>
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService">
+        </property>
+    </bean>
+    <!-- Report Association save -->
+    <bean
+        id="org.hisp.dhis.rbf.reportmanagement.action.DefineReportAssociationsAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.DefineReportAssociationsAction"
+        scope="prototype">
+        <property name="selectionTreeManager"
+            ref="org.hisp.dhis.oust.manager.SelectionTreeManager">
+        </property>
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService">
+        </property>
+    </bean>
+
+    <!-- Report Deletion -->
+    <bean id="org.hisp.dhis.rbf.reportmanagement.action.DelReportAction"
+        class="org.hisp.dhis.rbf.reportmanagement.action.DelReportAction"
+        scope="prototype">
+        <property name="reportService" ref="org.hisp.dhis.reports.ReportService"></property>
+    </bean>
+
+	<!-- PBF Reports -->
+	 
+	<bean id="org.hisp.dhis.rbf.reportmanagement.action.PBFReportFormAction" class="org.hisp.dhis.rbf.reportmanagement.action.PBFReportFormAction"
+	    scope="prototype">
+	    
+	</bean>
+
+	<bean id="org.hisp.dhis.rbf.reportmanagement.action.GetPBFReportsAction" class="org.hisp.dhis.rbf.reportmanagement.action.GetPBFReportsAction"
+	    scope="prototype">
+	    <property name="reportService" ref="org.hisp.dhis.reports.ReportService"></property>
+	    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService"></property>
+	</bean>
+	
+	<!-- Get PBF Reports Periods -->
+	<bean id="org.hisp.dhis.rbf.reportmanagement.action.GetPBFReportPeriodsAction" class="org.hisp.dhis.rbf.reportmanagement.action.GetPBFReportPeriodsAction"
+	    scope="prototype">
+	</bean>
+
+
+	<!-- PBF Reports -->
+	<!-- 
+	<bean id="org.hisp.dhis.rbf.report.action.PBFReportFormAction" class="org.hisp.dhis.rbf.report.action.PBFReportFormAction"
+	    scope="prototype">
+	    <property name="organisationUnitService" ref="org.hisp.dhis.organisationunit.OrganisationUnitService" />
+	    <property name="organisationUnitGroupService" ref="org.hisp.dhis.organisationunit.OrganisationUnitGroupService" />
+	    <property name="constantService" ref="org.hisp.dhis.constant.ConstantService" />
+	</bean>		
+	-->
+	
+	
+	
+	
+<!-- Aggregation Job Scheduler -->
+
+<!-- 
+    <bean name="schedulerForAggregationJob"
+        class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="org.hisp.dhis.rbf.scheduler.AggregationJobScheduler" />
+        
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="organisationUnitService" value-ref="org.hisp.dhis.organisationunit.OrganisationUnitService"/>
+                <entry key="constantService" value-ref="org.hisp.dhis.constant.ConstantService"/>
+				<entry key="aggregationConditionService" value-ref="org.hisp.dhis.caseaggregation.CaseAggregationConditionService"/>
+				<entry key="dataSetService" value-ref="org.hisp.dhis.dataset.DataSetService"/>
+				<entry key="defaultPBFAggregationService" value-ref="org.hisp.dhis.rbf.impl.DefaultPBFAggregationService"/>
+				<entry key="periodService" value-ref="org.hisp.dhis.period.PeriodService"/>
+            </map>
+        </property>
+        
+   </bean>
+
+   <bean id="cronTriggerForAggregationJob"
+        class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="schedulerForAggregationJob" />
+       
+        <property name="cronExpression" value="0 0/1 * * * ?" />
+   </bean>
+-->
+<!-- Scheduler for all Jobs -->
+<!-- 
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		
+		<property name="triggers">
+			<list>
+				<ref bean="cronTriggerForAggregationJob" />
+			</list>
+		</property>
+   </bean>	
+	
+-->	
+	
+	
+    <!-- PBF Partner Fund Management -->
+
+    <bean id="org.hisp.dhis.rbf.partner.action.PartnerFundManagement"
+          class="org.hisp.dhis.rbf.partner.action.PartnerFundManagement"
+          scope="prototype">
+    </bean>
+	
+	<!--  Load Partner List -->
+	
+    <bean id="org.hisp.dhis.rbf.partner.action.GetPartnerDateListAction"
+          class="org.hisp.dhis.rbf.partner.action.GetPartnerDateListAction"
+          scope="prototype">
+    </bean>	
+
+	<!--  Show Add Partner form -->	
+    <bean id="org.hisp.dhis.rbf.partner.action.PartnerFormAction"
+        class="org.hisp.dhis.rbf.partner.action.PartnerFormAction"
+        scope="prototype">
+    </bean>	
+	
+    <!-- Add/ Update Partner -->
+    <bean id="org.hisp.dhis.rbf.partner.action.SavePartnerDetailsResultAction"
+        class="org.hisp.dhis.rbf.partner.action.SavePartnerDetailsResultAction"
+        scope="prototype">
+        <property name="selectionTreeManager" ref="org.hisp.dhis.oust.manager.SelectionTreeManager" />
+        <!--<property name="pbfDataValueService" ref="org.hisp.dhis.rbf.api.PBFDataValueService" />-->
+    </bean>		
+	
+
+	<!--  Show Update Partner form -->
+    <bean id="org.hisp.dhis.rbf.partner.action.UpdatePartnerFormAction"
+        class="org.hisp.dhis.rbf.partner.action.UpdatePartnerFormAction"
+        scope="prototype">
+        <property name="selectionTreeManager"
+            ref="org.hisp.dhis.oust.manager.SelectionTreeManager">
+        </property>        
+    </bean>	
+
+	<!--  Remove Partner -->
+    <bean id="org.hisp.dhis.rbf.partner.action.RemovePartnerAction"
+          class="org.hisp.dhis.rbf.partner.action.RemovePartnerAction"
+          scope="prototype">
+    </bean>		
+
+	<!--  Validate Partner -->
+    <bean id="org.hisp.dhis.rbf.partner.action.ValidatePartnerAction"
+          class="org.hisp.dhis.rbf.partner.action.ValidatePartnerAction"
+          scope="prototype">
+          <property name="selectionTreeManager" 
+          	ref="org.hisp.dhis.oust.manager.SelectionTreeManager" />
+    </bean>	
+
+
+    <!-- Get DataElements and Periods List-->
+    <bean id="org.hisp.dhis.rbf.partner.action.GetDataElementAndPeriodListAction"
+        class="org.hisp.dhis.rbf.partner.action.GetDataElementAndPeriodListAction"
+        scope="prototype">
+    </bean>	
+	
+	
+	<!-- 
+    <bean id="org.hisp.dhis.rbf.partner.action.PartnerDataListAction"
+          class="org.hisp.dhis.rbf.partner.action.PartnerDataListAction"
+          scope="prototype">
+    </bean>
+	-->
+
+
+
+
+	
+	
+	
+	
+</beans>

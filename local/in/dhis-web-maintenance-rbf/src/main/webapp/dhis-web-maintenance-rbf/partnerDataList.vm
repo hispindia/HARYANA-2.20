@@ -1,0 +1,53 @@
+<style >
+    .mandatory
+    {
+        color:red;
+        font-size: 1.5em;
+    }
+</style>
+
+<div style="width:100%;" id="tariffTable">
+    <table id="tariffDetails" name="tariffDetails" cellspacing="0">
+        <thead >
+        <tr >
+            <th >PBF Type</th>
+            <th >Tariff</th>
+            <th >Target</th>
+            <th >Target %</th>
+            <th >Start Date</th>
+            <th >End Date</th>
+        ##if( $updateAuthority == 'Yes' )
+            <th >Operations</th>
+        ##end
+        </tr>
+        </thead>
+        <tbody>
+            #set( $mark = false )
+            #foreach( $tariff in $tariffList )
+                #if( $mark )
+                    #set( $mark = false )
+                #else
+                    #set( $mark = true )
+                #end
+            <tr >
+                <td >$!tariff.dataSet.name</td>
+                <td >$!tariff.value</td>
+                <td >$!tariff.target</td>
+                <td >$!tariff.targetPercentage</td>
+                <td data-sorter="shortDate" data-date-format="yyyymmdd">$simpleDateFormat.format($!tariff.startDate)</td>
+                <td data-sorter="shortDate" data-date-format="yyyymmdd">$simpleDateFormat.format($!tariff.endDate)</td>
+            ##if($updateAuthority == 'Yes')
+                <td>
+                    <a href="javascript:deleteTariffDataValue('$tariff.organisationUnit.id','$tariff.orgUnitGroup.id','$tariff.dataElement.id','$tariff.dataSet.id','$simpleDateFormat.format($!tariff.startDate)','$simpleDateFormat.format($!tariff.endDate)')">
+                        <img src="images/delete.png" width="17px"/>
+                    </a>
+                    <a href="javascript:editTariffDataValue('$tariff.organisationUnit.id','$tariff.orgUnitGroup.id','$tariff.dataElement.id','$tariff.dataSet.id','$simpleDateFormat.format($!tariff.startDate)','$simpleDateFormat.format($!tariff.endDate)','$tariff.value','$!tariff.target','$!tariff.targetPercentage')">
+                        <img src="../images/edit.png" alt="$i18n.getString( 'edit' )" width="17px"/>
+                    </a>
+                </td>
+            ##end
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>

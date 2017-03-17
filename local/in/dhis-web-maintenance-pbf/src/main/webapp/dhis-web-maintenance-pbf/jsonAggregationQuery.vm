@@ -1,0 +1,8 @@
+{ "caseAggregation":
+  {
+    "id": "${caseAggregation.id}",
+	"name": "$!encoder.jsonEncode( ${caseAggregation.name} )",
+	"aggregationDataElement": "$!encoder.jsonEncode( ${caseAggregation.aggregationDataElement.name} )",
+	"operator": "${caseAggregation.operator}"
+  }
+}

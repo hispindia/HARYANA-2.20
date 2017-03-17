@@ -1,0 +1,78 @@
+
+<h2>Data Integration</h2>
+<ul>
+    <li>Data Import</li>
+    <ul>
+		#if( $auth.hasAccess( "dhis-web-excelimport", "excelImportForm") )
+			
+			<li><a href = "excelImportForm.action">Data Import From Excel</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-excelimport", "lineListingExcelImportForm") )
+			<li><a href = "lineListingExcelImportForm.action">LineListing Data Import From Excel</a></li>
+		#end
+		
+		<!--        
+		<li>
+            <a href = "portalDataImportForm.action">Data Import From Portal</a>
+        </li>
+        <li>
+            <a href = "tcsDataImportForm.action">Import XML From TNHMIS</a>
+        </li>
+		-->
+		
+    </ul>        
+ </ul>       
+<ul>
+     <li>Downloads</li>
+     <ul>   
+        
+		<li>
+            <a href = "exportExcelFile.action?fileType=PHC_MonthlyConsolidated.xls" target="_blank">PHC Monthly Consolidated</a>
+        </li>
+		
+		<li>
+            <a href = "exportExcelFile.action?fileType=SC_MonthlyConsolidated.xls" target="_blank">SC Monthly Consolidated</a>
+        </li>
+		
+		<li>
+            <a href = "exportExcelFile.action?fileType=LineListingMaternalDeaths.xls" target="_blank">Line Listing Maternal Death</a>
+        </li>
+		
+		<li>
+            <a href = "exportExcelFile.action?fileType=LineListingDeaths.xls" target="_blank">Line Listing Death</a>
+        </li>		
+		
+		<!--
+        <li>
+            <a href = "exportExcelFile.action?fileType=SC Format.xls" target="_blank">Format for SC</a>
+        </li>
+        <li>
+            <a href = "exportExcelFile.action?fileType=SOP PHC 22-10-2012.doc" target="_blank">SOP PHC 22-10-2012</a>
+        </li>
+        <li>
+            <a href = "exportExcelFile.action?fileType=SOP Subcentre 22-10-2012.doc" target="_blank">SOP SC 22-10-2012</a>
+        </li>		
+		-->
+		
+		<!--
+		<li>
+            <a href = "exportExcelFile.action?fileType=phc" target="_blank">Format for PHC/CHC/DH/SDH</a>
+        </li>
+		<li>
+            <a href = "exportExcelFile.action?fileType=private" target="_blank">Format for Private</a>
+        </li>
+        <li>
+            <a href = "exportExcelFile.action?fileType=sc" target="_blank">Format for SC</a>
+        </li>
+        <li>
+            <a href = "exportExcelFile.action?fileType=sopphc" target="_blank">SOP PHC 22-10-2012</a>
+        </li>
+        <li>
+            <a href = "exportExcelFile.action?fileType=sopsc" target="_blank">SOP SC 22-10-2012</a>
+        </li>
+		-->
+		
+		
+     </ul>   
+</ul>

@@ -1,0 +1,100 @@
+
+
+<script type="text/javascript">
+
+</script>
+
+<style>
+	
+/* tables */
+table.tablesorter {
+    font-family:arial;
+    background-color: #CDCDCD;
+    margin:10px 0pt 15px;
+    font-size: 8pt;
+    width: 100%;
+    text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+    background-color: #e6EEEE;
+    border: 1px solid #FFF;
+    font-size: 8pt;
+    padding: 4px;
+}
+table.tablesorter thead tr .header {
+    background-image: url(bg.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+table.tablesorter tbody td {
+    color: #3D3D3D;
+    padding: 4px;
+    background-color: #FFF;
+    vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+    background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+    background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+    background-image: url(desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+background-color: #8dbdd8;
+}
+
+table.tablesorter td:hover {
+ background-color: #ffff99;
+}
+
+table.tablesorter tr.odd td:hover {
+ background-color: #ffff99;
+}
+	
+</style>
+
+
+
+#set( $tabIndex = 1 )
+#if ( $qualityMaxValues.size() > 0 )
+
+
+	<table class="tablesorter" id="table1">
+		<thead>
+        
+    	<tr bgcolor="#CBDDEB">
+    		<th style="text-align: center;width:100px">Sl No</th>
+			<th style="text-align: center;width:100px">$i18n.getString( "date" )(yyyy-mm-dd)</th>
+    		<th style="text-align: center;width:100px">Apply</th>
+    	</tr>
+        </thead>
+		<tbody>
+    	#set( $mark = false )
+    	#set( $count=1 )
+    	#foreach($qualityMaxValue in $qualityMaxValues )
+    		<tr #alternate($mark)>
+    			 <td style="text-align: center;width:100px" >$count</td>
+				 <td style="text-align: center;width:100px" >$qualityMaxValue</td>
+				
+				<td style="text-align: center;width:100px" >
+					#set( $buttonId = $qualityMaxValue )
+					<input type="button" id="button$buttonId" name="button$buttonId" value='$i18n.getString( "Apply" )' onclick="applyStartDateEndDate( '$qualityMaxValue' );" />
+				</td>
+    		</tr>
+    		#set( $tabIndex = $tabIndex + 1 )
+    		#set( $mark = !$mark)
+    		#set($count = $count + 1)
+    	#end
+		</tbody>
+	</table>
+#end
+
+<script>
+    $(document).ready(function()
+    { 
+        $("#table1").tablesorter( {widgets: ['zebra'], headers: { 2:{sorter: false}}} );                          
+    });
+</script>

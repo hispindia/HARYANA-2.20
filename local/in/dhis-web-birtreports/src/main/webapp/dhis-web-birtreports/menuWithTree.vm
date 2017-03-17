@@ -1,0 +1,17 @@
+
+<a href="index.action"><h2>Birt Reports Engine</h2></a>
+
+<br/>
+
+#parse( "/dhis-web-commons/ouwt/orgunittreesearch.vm" )
+
+<script type="text/javascript">
+
+    function orgUnitHasBeenSelected( orgUnitIds )
+    {
+
+    }
+
+    selection.setListenerFunction( orgUnitHasBeenSelected );
+
+</script>

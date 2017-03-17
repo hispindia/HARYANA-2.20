@@ -1,0 +1,70 @@
+<script type="text/javascript" src="javascript/addLookup.js"></script>
+<script>
+    
+    jQuery(document).ready( function(){
+
+        currentDiv = 'addLookupForm';
+        isSubmit = true;
+        
+        jQuery("#addLookupForm").validate({
+                 meta:"validate"
+                ,errorElement:"span"
+                ,submitHandler: function(form)
+                    {
+                        if( isSubmit ) 
+                        {
+                            addLookup();
+                        }
+                    }
+            });
+    }); 
+    
+</script>
+
+<h3>$i18n.getString( "add_lookup" )</h3>
+
+<form id="addLookupForm" name="addLookupForm" action="addLookup.action" method="post" class="inputForm">
+  <table style="width: 600px">
+    <col style="width: 400px">
+    <col>
+    <thead>
+      <tr>
+        <th colspan="2">$i18n.getString( "lookup_details" )</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label>$i18n.getString( "name" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="name" name="name" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "code" )</label></td>
+        <td><input type="text" id="code" name="code"></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "description" )</label></td>
+        <td><textarea id="description" name="description"></textarea></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "type" ) <em title="$i18n.getString( 'required' )" class="required">*</em></label></td>
+        <td><input type="text" id="type" name="type" class="{validate:{required:true}}"></td>
+      </tr>
+      
+      <tr>
+        <td><label>$i18n.getString( "value" )</label></td>
+        <td><input type="text" id="value" name="value"></td>
+      </tr>
+
+	  <tr>
+        <td colspan="3">
+          <input type="submit" value="$i18n.getString( 'save' )" style="width:120px" />
+          <input type="button" onclick="dhis2.commons.redirectCurrentPage( 'getAllLookups.action' )" value="$i18n.getString( 'cancel' )" style="width:120px" />
+        </td>
+      </tr>
+	  
+    </tbody>
+  </table>
+</form>

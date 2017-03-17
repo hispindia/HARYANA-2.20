@@ -1,0 +1,8 @@
+{ "qualityscorepayment": 
+  {
+    "id": "$!{qualityscorepayment.id}",
+    "startRange": "$!{qualityscorepayment.startRange}",
+    "endRange": "$!{qualityscorepayment.endRange}",
+    "addQtyPayment": "$!{qualityscorepayment.addQtyPayment}"
+  }
+}

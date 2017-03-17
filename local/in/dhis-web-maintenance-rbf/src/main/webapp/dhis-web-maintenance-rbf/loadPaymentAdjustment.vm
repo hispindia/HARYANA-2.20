@@ -1,0 +1,108 @@
+
+<script type="text/javascript" >
+	
+	jQuery(document).ready( function(){
+		dataElementIdArray = new Array();
+		#foreach( $dataElement in $dataElements )
+			dataElementIdArray.push( $dataElement.id )
+		#end
+
+		document.getElementById("amountAvail").value = '$!availableAmount';
+		adjustPer();
+		
+		calculateAdjustedTariffAmount();
+	});
+
+	var total = 0.0;
+
+	function calculateAdjustedTariffAmount()
+	{
+		var amountAvail = $("#amountAvail").val();	
+		var totalAvail = $("#total").val();	
+		var qualityScore = $("#quality_score").val();
+		
+		var totalAmtToPay = 0;
+		
+		var adjustmentPer = ( parseFloat( amountAvail ) / parseFloat (totalAvail) ) * 100 ;
+	
+		for ( i = 0; i < dataElementIdArray.length; i++ )
+	    {
+			var tariffAmount = document.getElementById("pbfTariff_"+dataElementIdArray[i]).value;
+			var totalCalculatedValue =  ( parseFloat( tariffAmount ) * parseFloat (adjustmentPer) ) / 100;
+			document.getElementById( "adjusted_"+dataElementIdArray[i] ).value = Math.round(totalCalculatedValue);
+			
+			var pbfAmount = document.getElementById("pbfQty_"+dataElementIdArray[i]).value;
+			
+			var adjustedAmount = parseFloat(totalCalculatedValue) * parseFloat (pbfAmount);
+			document.getElementById( "adjustedAmt_"+dataElementIdArray[i] ).value = Math.round(adjustedAmount);
+			
+			var adjAmtIncQS = ( parseFloat( adjustedAmount ) * parseFloat ( qualityScore ) ) / 100; 
+			document.getElementById( "adjAmtIncQS_"+dataElementIdArray[i] ).value = Math.round(adjAmtIncQS);
+			
+			totalAmtToPay += parseFloat( adjAmtIncQS );
+	    }
+	    
+	    document.getElementById( "total_amt_to_pay" ).value = Math.round(totalAmtToPay);
+	}
+
+</script>
+
+<style >
+	.mandatory
+	{
+		color:red;
+		font-size: 1.5em;
+	}
+</style>
+
+<input type="hidden" id="dataElementId" name="dataElementId" value="$!selecteddataElement.id"/>
+<div style="width:95%;" id="paymentTable">
+<table style="width:100%;" id="paymentDetails" name="paymentDetails" cellspacing="0" class="formSection">
+	<thead >
+		<tr bgcolor="#CBDDEB">
+			<th >$i18n.getString( "indicator" )</th>
+			<th >$i18n.getString( "quantity_for" )</th>
+			<th >$i18n.getString( "Tariff" )</th>			
+			<th >$i18n.getString( "amount" )</th>
+			<th >$i18n.getString( "amount_including_quality" )</th>
+			<th >$i18n.getString( "adjusted_tariff" )</th>
+			<th >$i18n.getString( "adjusted_amount" )</th>
+			<th >$i18n.getString( "adjusted_amount_including_quality" )</th>
+        </tr>
+	</thead>
+	<tbody>
+		#set( $mark = false )
+		#set( $pbfTotalUnadjustedAmount = 0 )
+		#foreach( $dataElement in $dataElements )
+			#if( $mark )
+                #set( $mark = false )
+			#else
+				#set( $mark = true )
+			#end
+			
+            <tr #if( $mark ) bgcolor = "#FFFFFF" #else bgcolor="#E0ECF8" #end>
+				<td>$!dataElement.name</td>
+				<td align="center"><input type="text" name="pbfQty_$dataElement.id" id="pbfQty_$dataElement.id" style="text-align:center;" size="10" value="$!mathTool.round( $!pbfQtyMap.get( $dataElement.id ) )" readonly="readonly"/></td>
+				<td align="center"><input type="text" name="pbfTariff_$dataElement.id" id="pbfTariff_$dataElement.id" style="text-align:center;" size="10" value="$!mathTool.round( $!pbfTariffMap.get( $dataElement.id ) )" readonly="readonly"/></td>
+				#set( $tariffVal = $!pbfQtyMap.get( $dataElement.id ) * $!pbfTariffMap.get( $dataElement.id ) )
+				<td id="pbfAmt_$dataElement.id" align="center">$!mathTool.round( $tariffVal )</td>
+				#set( $pbfAmtIncQS = ( $!tariffVal * $!overAllQualityScore )/100 )
+				<td id="pbfAmtIncQS_$dataElement.id" align="center">$!mathTool.round( $!pbfAmtIncQS )</td>
+				#set( $pbfTotalUnadjustedAmount = $!pbfTotalUnadjustedAmount + $!pbfAmtIncQS )					
+				<td><input type="text" name="adjusted_$dataElement.id" id="adjusted_$dataElement.id" style="text-align:center;" size="10" /></td>
+	            <td align="center"><input type="text" name="adjustedAmt_$dataElement.id" id="adjustedAmt_$dataElement.id" style="text-align:center;" size="15" /></td>
+	            <td align="center"><input type="text" name="adjAmtIncQS_$dataElement.id" id="adjAmtIncQS_$dataElement.id" style="text-align:center;" size="15" /></td>
+            </tr>        
+		#end
+		
+		<tr>
+			<td>$i18n.getString( "quality_score" ) : <input type="text" name="quality_score" id="quality_score" style="text-align:center;" size="10" value="$!mathTool.roundTo( 2, $!overAllQualityScore )" readonly /></td>						
+			<td colspan="2" align="right">$i18n.getString( "total_unadjusted_amount" )</td>
+			<td><input type="text" name="total" id="total" style="text-align:center;" size="20" value="$!mathTool.round( $pbfTotalUnadjustedAmount )" readonly /></td>			
+			<td>&nbsp;</td>
+			<td colspan="2" align="right">$i18n.getString("total_amt_to_pay")</td>
+			<td><input type="text" name="total_amt_to_pay" id="total_amt_to_pay" style="text-align:center;" size="20" readonly /></td>
+		</tr>
+    </tbody>
+</table>
+</div>

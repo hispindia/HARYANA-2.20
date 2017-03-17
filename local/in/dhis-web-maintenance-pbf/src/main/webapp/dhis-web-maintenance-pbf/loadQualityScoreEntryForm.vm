@@ -1,0 +1,129 @@
+
+#macro( validate $type $require )
+  #if( $type == "NUMBER" || $type == "number" )
+    {validate:{ number:true #if($require), required:true #end }}
+  
+	#elseif( $type == "int" )
+  	{validate:{ integer:true #if($require), required:true #end }}
+  	
+  	#elseif( $type == "positiveNumber" )
+  	{validate:{ positive_integer:true #if($require), required:true #end }}
+  	
+	#elseif( $type == "negativeNumber" )
+  	{validate:{ negative_integer:true #if($require), required:true #end }}
+  
+  
+	#elseif( $require )
+    {validate:{required:true}}
+  #end
+#end
+
+#set( $tabIndex = 1 )
+#if ( $dataElements.size() > 0)
+
+<table class="formSection" id="dataEntryTable">
+	<tr bgcolor="#CBDDEB">
+		<th style="text-align: left;">$i18n.getString( "dataelement" )</th>
+		<th style="text-align: center;">$i18n.getString( "quality_score" )</th>
+		<th style="text-align: center;">$i18n.getString( "quality_max" )</th>		
+		<th style="text-align: center;">$i18n.getString( "quality_percentage" )</th>
+	</tr>
+	<script>
+		var allTotal = 0.0;
+		var allScore = 0.0;
+		var allMax = 0.0;
+	</script>
+	
+	#set( $mark = false )
+	#set( $count = 0)
+	#foreach($dataElement in $dataElements )
+		#set( $count = $count + 1)
+		#if( $mark1 )
+           #set( $mark1 = false )
+        #else
+          #set( $mark1 = true )
+        #end
+		<tr #if( $mark1 ) bgcolor = "#FFFFFF" #else bgcolor="#E0ECF8" #end>
+			<td><label>$dataElement.getFormNameFallback()</label></td>
+			
+			#set( $qualityMaxValue = $!qualityMaxValueMap.get( $dataElement.id ) )
+			#set( $dataValue = $!dataValueMap.get( $dataElement.id ) )
+			<td>
+				<input onkeyup="calPercenVal( $dataElement.id )" onblur="saveValue('$dataElement.id')" type="text" name="score_$dataElement.id" id="score_$dataElement.id" 
+						value="$!dataValue.value" tabindex="$tabIndex" style="text-align: center;" 
+						#if($dataElement.type =='number') class="{validate:{number:true}}" 
+						#elseif($dataElement.type =='int') class="{validate:{integer:true}}"
+						#elseif($dataElement.type =='positiveNumber') class="{validate:{positive_integer:true}}"
+						#elseif($dataElement.type =='negativeNumber') class="{validate:{negative_integer:true}}"
+						#end />
+			</td>	
+			<script>
+					function changeInt()
+					{
+						var percentage = 0.0;
+    					if($("#score_"+$dataElement.id).val() != '' && $("#max_"+$dataElement.id).val() != '')
+    					{
+    						percentage = (parseFloat($dataValue.value) * 100) / parseFloat($qualityMaxValue.value);
+    						$('#percentage_'+$dataElement.id).val(percentage.toFixed(2));
+    					}	
+    					
+                        if( $("#score_"+$dataElement.id).val() != '')
+                         {
+                             allScore = allScore + parseFloat($("#score_"+$dataElement.id).val());
+                         }
+                        if( $("#max_"+$dataElement.id).val() != '')
+                         {
+                             allMax = allMax + parseFloat($("#max_"+$dataElement.id).val());
+                         }
+                        if(allMax != 0.0)
+                        {
+						  allTotal = (allScore / allMax ) * 100;
+						 }
+					
+						$('#all-total').val(allTotal.toFixed(2));					
+					}
+					changeInt();
+			</script>
+			<td>
+				<input type="text" class="max" name="max_$dataElement.id" id="max_$dataElement.id" value="$!qualityMaxValue.value" tabindex="$tabIndex" style="text-align: center;" readonly/>
+			</td>
+			<td >
+				<input type="text" id="percentage_$dataElement.id" style="text-align: center;" readonly/>
+            </td>
+			
+		</tr>		
+	#end
+	#end
+		<tr>
+			<td colspan="3" style="text-align: right;">Overall Score ( Sum Score/Sum Max Score )</td>			
+			<td >
+				<input type="text" id="all-total" style="text-align: center;" readonly size="18"/>%
+            </td>
+		</tr>		
+</table>
+<script >
+	function calPercenVal( dataElementId )
+	{
+		var percentage = 0.0;
+		
+		var score = 0.0;
+        
+    	if($("#score_"+dataElementId).val() != '' && $("#max_"+dataElementId).val() != '')
+    	{
+    		percentage = (parseFloat($("#score_"+dataElementId).val()) * 100) / parseFloat($("#max_"+dataElementId).val());
+    		$('#percentage_'+dataElementId).val(percentage.toFixed(2));
+    	}
+    	#foreach($dataElement in $dataElements )
+    		if( $("#score_"+$dataElement.id).val() != '')
+            {
+              score = score + parseFloat($("#score_"+$dataElement.id).val());              
+            }
+	    #end
+    	if(allMax != 0.0)
+    	{
+		  allTotal = (score / allMax ) * 100;
+		}
+		
+		$('#all-total').val(allTotal.toFixed(2));
+	}
+</script>

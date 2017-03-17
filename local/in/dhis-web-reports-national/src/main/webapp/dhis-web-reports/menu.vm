@@ -1,0 +1,208 @@
+
+<!-- for Bihar General Report-->
+
+<h2>Report Analyser</h2>
+
+#if( $auth.hasAccess( "dhis-web-reports", "reportManagement") )
+    <ul>
+        <li>Report Management</li>
+        <ul>
+            <li><a href = "reportManagement.action">Report Management</a></li>
+        </ul>
+    </ul>
+#end
+
+<!--
+<ul>
+     <li>Downloads</li>
+     <ul>   
+        
+		<li>
+            <a href = "exportExcelFile.action?fileType=HMIS.rar" target="_blank">HMIS Training Material</a>
+        </li>
+     </ul>   
+</ul>
+-->
+
+<ul>
+	<li>Report Analysis</li>
+	<ul>
+		
+		
+		<!-- for Maharashtra -->
+		
+		<!--
+		#if( $auth.hasAccess( "dhis-web-reports", "upwardReportAnalyser") )
+			<li><a href = "upwardReportAnalyser.action">GOI Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "routineReportAnalyser") )
+			<li><a href = "routineReportAnalyser.action">Routine Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "periodWiseprogressReportAnalyser") )
+			<li><a href = "periodWiseprogressReportAnalyser.action">Periodwise Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "ouWiseProgressReportAnalyser") )
+			<li><a href = "ouWiseProgressReportAnalyser.action">Orgunitwise Progress Reports</a></li>
+		#end		
+
+		#if( $auth.hasAccess( "dhis-web-reports", "periodOrgUnitServiceProgressReportAnalyser") )
+			<li><a href = "periodOrgUnitServiceProgressReportAnalyser.action">Period OrgUnit Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "programWiseOrgUnitProgressReportAnalyser") )
+			<li><a href = "programWiseOrgUnitProgressReportAnalyser.action">Programwise OrgUnitProgress Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyser.action">Linelisting WebPortal Reports( From Event Capture )</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyserFromLineListing") )
+			<li><a href = "linelistingWebPortalReportAnalyserFromLineListing.action">Linelisting WebPortal Reports( From Linelisting )</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "metaDataReportAnalyser") )
+			<li><a href = "metaDataReportAnalyser.action">Meta Data Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "lineListingBulkReportAnalyser") )
+			<li><a href = "lineListingBulkReportAnalyser.action">Linelisting Bulk Report</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingReportAnalyser") )
+			<li><a href = "linelistingReportAnalyser.action">Linelisting Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "populateMultipleUsers") )
+			<li><a href = "populateMultipleUsers.action">Populate Users From Excel</a></li>
+		#end
+		-->
+				
+		
+		<!-- for Bihar 
+		#if( $auth.hasAccess( "dhis-web-reports", "upwardReportAnalyser") )
+			<li><a href = "upwardReportAnalyser.action">GOI Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "routineReportAnalyser") )
+			<li><a href = "routineReportAnalyser.action">Routine Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "periodWiseprogressReportAnalyser") )
+			<li><a href = "periodWiseprogressReportAnalyser.action">Periodwise Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "ouWiseProgressReportAnalyser") )
+			<li><a href = "ouWiseProgressReportAnalyser.action">Orgunitwise Progress Reports</a></li>
+		#end		
+
+		#if( $auth.hasAccess( "dhis-web-reports", "periodOrgUnitServiceProgressReportAnalyser") )
+			<li><a href = "periodOrgUnitServiceProgressReportAnalyser.action">Period OrgUnit Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "programWiseOrgUnitProgressReportAnalyser") )
+			<li><a href = "programWiseOrgUnitProgressReportAnalyser.action">Programwise OrgUnitProgress Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyser.action">Linelisting WebPortal Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "metaDataReportAnalyser") )
+			<li><a href = "metaDataReportAnalyser.action">Meta Data Reports</a></li>
+		#end
+		-->
+		
+		<!-- add more Report for Maharashtra -->
+		
+		<!--
+		#if( $auth.hasAccess( "dhis-web-reports", "lineListingBulkReportAnalyser") )
+			<li><a href = "lineListingBulkReportAnalyser.action">Linelisting Bulk Report</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingReportAnalyser") )
+			<li><a href = "linelistingReportAnalyser.action">Linelisting Reports</a></li>
+		#end		
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "populateMultipleUsers") )
+			<li><a href = "populateMultipleUsers.action">Populate Users From Excel</a></li>
+		#end
+		-->
+		
+		<!-- for Haryana -->
+		<!-- from LineListing -->
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyserFromLineListing") )
+ 			<li><a href = "linelistingWebPortalReportAnalyserFromLineListing.action">GOI Reports(Public Institution)(From Linelisting)</a></li>
+		#end
+	   
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyserFromLineListingPrivate") )
+ 			<li><a href = "linelistingWebPortalReportAnalyserFromLineListingPrivate.action">GOI Reports(Private Institution)(From Linelisting)</a></li>
+		#end
+		
+		<!-- from Event Capture -->
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyser.action">GOI Reports(Public Institution)(From Event Capture)</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyserPrivate") )
+			<li><a href = "linelistingWebPortalReportAnalyserPrivate.action">GOI Reports(Private Institution)(From Event Capture)</a></li>
+		#end
+		
+		
+		<!--
+		#if( $auth.hasAccess( "dhis-web-reports", "goiMonthlyReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyserPrivate.action">GOI Reports(Private Institution)</a></li>
+
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyserFromLineListing") )
+			<li><a href = "linelistingWebPortalReportAnalyserFromLineListing.action">Linelisting WebPortal Reports( From Linelisting )</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyser.action">Linelisting WebPortal Reports( From Event Capture )</a></li>
+		#end
+		-->
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "metaDataReportAnalyser") )
+			<li><a href = "metaDataReportAnalyser.action">Meta Data Reports</a></li>
+		#end
+		
+		<!--
+		#if( $auth.hasAccess( "dhis-web-reports", "routineReportAnalyser") )
+			<li><a href = "routineReportAnalyser.action">Routine Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "periodWiseprogressReportAnalyser") )
+			<li><a href = "periodWiseprogressReportAnalyser.action">Periodwise Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "ouWiseProgressReportAnalyser") )
+			<li><a href = "ouWiseProgressReportAnalyser.action">Orgunitwise Progress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "programWiseOrgUnitProgressReportAnalyser") )
+			<li><a href = "programWiseOrgUnitProgressReportAnalyser.action">Programwise OrgUnitProgress Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "periodOrgUnitServiceProgressReportAnalyser") )
+			<li><a href = "periodOrgUnitServiceProgressReportAnalyser.action">Period OrgUnit Progress Reports</a></li>
+		#end	
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "linelistingWebPortalReportAnalyser") )
+			<li><a href = "linelistingWebPortalReportAnalyser.action">Linelisting WebPortal Reports</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "populateMultipleUsers") )
+			<li><a href = "populateMultipleUsers.action">Populate Users From Excel</a></li>
+		#end
+		
+		#if( $auth.hasAccess( "dhis-web-reports", "lineListingBulkReportAnalyser") )
+            <li><a href = "lineListingBulkReportAnalyser.action">Linelisting Bulk Report</a></li>
+		#end
+		-->
+	</ul>
+</ul>

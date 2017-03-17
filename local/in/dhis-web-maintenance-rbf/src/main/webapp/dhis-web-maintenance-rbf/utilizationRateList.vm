@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    jQuery(document).ready(function(){	
+		tableSorter( 'listTable' );	
+	});
+    
+</script>
+
+<table class="mainPageTable">
+	<tr>
+		<td>
+			<table class="listTable" id="listTable"> 
+				<colgroup>
+					<col width="30"/>
+					<col />
+					<col />
+					<col/>
+					<col width="250"/>
+				</colgroup>   
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>$i18n.getString( "stare_range" )</th>
+						<th>$i18n.getString( "end_range" )</th>
+						<th>$i18n.getString( "Tariff Value" )</th> 
+						<th class="{sorter: false}" style="text-align:left">$i18n.getString( "operations" )</th>
+					</tr>
+				</thead>
+				<tbody id="list">   
+					#set( $count=1 )
+					#foreach( $utilizationRate in $utilizationRateList )
+						
+						<tr id="tr${utilizationRate.getStartRange()}">
+							<td>
+								$count
+							</td>
+							
+							<td>$encoder.htmlEncode( $!utilizationRate.getStartRange() )</td>
+							<td>$encoder.htmlEncode( $!utilizationRate.getEndRange() )</td>
+							<td>$encoder.htmlEncode( $!utilizationRate.getTariff() )</td>
+						
+							<td>
+								<a href="javascript:showUpdateutilizationRateForm( '$!utilizationRate.getStartRange()', '$!utilizationRate.getEndRange()' ,'$dataElement.getId()' )" title='$i18n.getString( "edit" )'><img src="../images/edit.png" alt='$i18n.getString( "edit" )'></a>
+								<a href="javascript:removeutilizationRate( '$!utilizationRate.getStartRange()', '$!utilizationRate.getEndRange()' , '$dataElement.getId()' )" title='$i18n.getString( "remove" )'><img src="images/deleteRed.png" alt='$i18n.getString( "remove" )'></a>
+							</td>                               
+						</tr>
+						#set($count = $count + 1)
+					#end
+				</tbody>
+			</table>
+		</td>
+	</tr>
+
+</table>

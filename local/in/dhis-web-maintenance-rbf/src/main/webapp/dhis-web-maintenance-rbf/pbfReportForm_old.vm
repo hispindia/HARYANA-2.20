@@ -1,0 +1,316 @@
+
+<script type="text/javascript">
+
+		var tempOrgUnitGroupNameMap = new Object();
+		
+		#foreach( $orgUnit in $orgUnitList )
+			
+			var orgUnitUid = ""+"$orgUnit.getUid()";
+			//tempOrgUnitGroupNameMap[orgUnitUid] = "$orgUnitGroupNameMap.get( orgUnitUid )";        
+			tempOrgUnitGroupNameMap["$orgUnit.getUid()"] = '$orgUnitGroupNameMap.get( "$orgUnit.getUid()" )';
+			//tempOrgUnitGroupNameMap["$orgUnit.getUid()"] = "ABCDEF"; 
+        		
+   		#end
+
+		// for orgUnit Group Id
+		var tempOrgUnitGroupIdMap = new Object();
+		
+		#foreach( $orgUnit in $orgUnitList )
+			tempOrgUnitGroupIdMap["$orgUnit.getUid()"] = '$orgUnitGroupIdMap.get( "$orgUnit.getUid()" )';
+			
+   		#end
+		
+	function formValidations()
+	{
+	    		
+		var reportList = document.getElementById("selectedReportId");
+        var reportIndex = reportList.selectedIndex;
+        if( reportList.options[reportIndex].value == null || reportList.options[reportIndex].value== "-1" )
+        {
+            showWarningMessage( "Please Select Report" );
+            return false; 
+        }		
+		
+		var reportFormatList = document.getElementById("selectedReportFormat");
+        var reportFormatIndex = reportFormatList.selectedIndex;
+        if( reportFormatList.options[reportFormatIndex].value == null || reportFormatList.options[reportFormatIndex].value== "-1" )
+        {
+            showWarningMessage( "Please Select Report Format" );
+            return false; 
+        }
+		
+		var startPeriodList = document.getElementById("selectedPeriodId");
+	    var startPeriodIndex = startPeriodList.selectedIndex;
+	    
+	    if( startPeriodList.options[startPeriodIndex].value == null || startPeriodList.options[startPeriodIndex].value== "-1" ) 
+		{ 
+			showWarningMessage( "Please Select Period" );
+			return false; 
+		}
+
+		
+	    return redirectTorptDesign();
+	}
+
+	
+    function redirectTorptDesign()
+    {
+		var period = $('#selectedPeriodId').val();
+	    
+		var startPeriod = period.split(":")[0];
+		var endPeriod = period.split(":")[1];
+		
+		var reportList = document.getElementById("selectedReportId");
+        var reportIndex = reportList.selectedIndex;
+		
+		var reportFormat =  $('#selectedReportFormat').val();
+		
+		var rprDesign = reportList.options[reportIndex].value;
+		
+        var orgunit = $('#treeSelectedId').val();
+		
+		var orgUnitId = selectionTreeSelection.getSelectedUid()[0];
+		
+		//var orgUnitGroupName = tempOrgUnitGroupNameMap.get( orgUnitId );
+		
+		var orgUnitGroupName = tempOrgUnitGroupNameMap[orgUnitId];
+		
+		//alert( orgUnitGroupName );
+		
+		
+		var groupId = tempOrgUnitGroupIdMap[orgUnitId];
+		
+		//alert( groupId );
+		
+		if( rprDesign == "MH_PATIENT_ALLOWANCE_CLAIM")
+		{
+			if( orgUnitGroupName == "Reporting Health Center")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Mathealth_report3_HC.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting Province Hospitals")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Mathealth_report3_PH.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting District hospital" )
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Mathealth_report3_DH.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+
+
+			else
+			{
+				   showWarningMessage( "Selected Facility Not Related to any group" );
+				   //return false;
+			}
+			
+		}
+		
+		else if( rprDesign == "HEALTH_PROVIDER_PAYMENT_CLAIM")
+		{
+			if( orgUnitGroupName == "Reporting Health Center")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Healthprovider_HC_report4.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting Province Hospitals")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/healthprovider_report4_PH.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting District hospital" )
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/healthprovider_DH_report4.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			else
+			{
+				   showWarningMessage( "Selected Facility Not Related to any group" );
+				   //return false;
+			}
+			
+		}		
+		
+		else if( rprDesign == "MATERNAL_HEALTH")
+		{
+			if( orgUnitGroupName == "Reporting Health Center")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/MATERNAL_HEALTH_HC.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting Province Hospitals")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Mathealth_PH.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting District hospital" )
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/Mathealth_DH.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			else
+			{
+				   showWarningMessage( "Selected Facility Not Related to any group" );
+				   //return false;
+			}
+			
+		}
+		
+		else if( rprDesign == "MONTHLY_PPS")
+		{
+			if( orgUnitGroupName == "Reporting Health Center")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/monthly_pps.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting Province Hospitals")
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/monthly_pps.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			
+			else if( orgUnitGroupName == "Reporting District hospital" )
+			{
+				var birtReportURL = "/birt/run?__report=/home/dhis2sever2/tomcat-8/webapps/birt/report/monthly_pps.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+				window.location.href =  birtReportURL;
+			}
+			else
+			{
+				   showWarningMessage( "Selected Facility Not Related to any group" );
+				   //return false;
+			}
+			
+		}
+
+		else
+		{
+			   showWarningMessage( "Design file is not set" );
+			   //return false;
+		}		
+		
+		//alert( orgunit + "--" + orgUnitId )
+		
+		//alert( rprDesign )
+		
+		
+		
+		//alert( startPeriod + " : " + endPeriod + " : " + rprDesign + " : " + orgUnitId );
+		
+		//var birtReportURL = "http://178.79.144.205:8989/birt/run?__report=/home/dqa/tomcat_pbf_laos/webapps/birt/report/"+rprDesign+"&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+
+		//alert( birtReportURL );
+		
+		//window.location.href =  birtReportURL;
+		
+		
+		
+		/*
+		
+		alert( startPeriod + " : " + endPeriod );
+		
+		var url = "../birt/run?__report=C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/birt/report/"+rprDesign+"&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgUnitId+"&groupId="+groupId;
+		
+		alert( url );
+		window.open('url', '_blank');
+		
+		window.location.href = "http://localhost:8090/birt/run?__report=C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/birt/report/"+rprDesign+"&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&orgUnit="+orgunit;
+		
+		
+	    //window.location.href = "http://localhost:8090/birt/run?__report=C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/birt/report/PBF_Payment_Voucher.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&District="+orgunit;
+	    
+		*/
+		
+	    return true;
+    }
+
+</script>
+
+
+
+
+<h3>$i18n.getString( "pbf_report_management" )</h3>
+
+<form id="generateReport"  method="Get" action="#" onsubmit="return formValidations()" >
+	<table>
+		<tr>
+			<td><label for="report">$i18n.getString( "report" )</label></td>
+			<td>
+				<select id="selectedReportId" name="selectedReportId" style="width:220px" >
+					<option value="-1">[$i18n.getString( "select" )]</option>
+					<option value="MATERNAL_HEALTH" >Maternal Health</option>
+					<option value="MONTHLY_PPS" >Monthly PPS</option>
+					<option value="MH_PATIENT_ALLOWANCE_CLAIM" >MH Patient Allownce Claim</option>
+					<option value="HEALTH_PROVIDER_PAYMENT_CLAIM" >Health Provider Payment Claim</option>
+					
+					<!--
+					<option value="MATERNAL_HEALTH_HC.rptdesign" >Maternal Health HC</option>
+					<option value="Mathealth_DH.rptdesign" >Maternal Health DH</option>
+					<option value="Mathealth_PH.rptdesign" >Maternal Health PH</option>
+					<option value="monthly_pps.rptdesign" >Monthly PPS</option>
+
+					<option value="Mathealth_report3_DH.rptdesign" >MH Patient Allownce Claim DH</option>
+					<option value="Mathealth_report3_HC.rptdesign" >MH Patient Allownce Claim HC</option>
+					<option value="Mathealth_report3_PH.rptdesign" >MH Patient Allownce Claim PH</option>
+					<option value="healthprovider_DH_report4.rptdesign" >Health Provider Payment Claim DH</option>
+					<option value="Healthprovider_HC_report4.rptdesign" >Health Provider Payment Claim HC</option>
+					<option value="healthprovider_report4_PH.rptdesign" >Health Provider Payment Claim PH</option>
+					-->
+				</select>
+			</td>
+		</tr>	
+		
+		
+		</tr>
+            <td><label for="outputFormat">$i18n.getString( "outputFormat" )</label></td>
+			<td>
+				<select id="selectedReportFormat" name="selectedReportFormat" style="width:220px" >
+                    <option value="-1">[$i18n.getString( "select" )]</option>
+                    <option value="pdf">PDF</option>
+                    <option value="xls_spudsoft">XLS</option>       
+                </select>
+            </td>
+		</tr>
+		
+		<tr>
+			<td><label for="selectedPeriodId">$i18n.getString( "period" )</label></td>
+			<td><select id="selectedPeriodId" name="selectedPeriodId" style="width:220px" >
+					<option value="-1">[$i18n.getString( "select" )]</option>
+						#foreach( $period in $periods )
+							<!--<option value="$period.isoDate">$encoder.htmlEncode( $period.name )</option>-->
+							#set( $periodId =  $period.getStartDateString() + ':' + $period.getEndDateString() )
+							<option value="$periodId">$encoder.htmlEncode( $period.name )</option>
+						#end
+				</select>
+				<br>
+				<input type="button" id="prevButton"  style="width:75px" value="$i18n.getString( 'prev_year' )" title="$i18n.getString('earlier_periods')" onclick="getAvailablePeriodsTemp('$periodTypeName', 'selectedPeriodId', '-1' )" >
+				<input type="button" id="nextButton"  style="width:75px" value="$i18n.getString( 'next_year' )" title="$i18n.getString('later_periods')" onclick="getAvailablePeriodsTemp( '$periodTypeName', 'selectedPeriodId', '1' )" >
+			</td>
+		</tr>	
+	</table>
+	
+	  <table id="selectionTable">
+		<tr>
+		  <td>
+			#organisationUnitSelectionTree( false, false, false )
+		  </td>
+	    </tr>
+	    <tr>
+            <td>
+                <!--<input type="submit" id="submitButton" value="$i18n.getString( 'generate' )" style="width:10em"  />-->
+				<input type="button" id="submitButton" value="$i18n.getString( 'generate' )" style="width:10em" onclick="formValidations()" />
+                <!--<input type="text" id="birtpath" name="birtpath" value="$birtPath" />-->
+            </td>
+	    </tr>
+	  </table>
+
+</form>

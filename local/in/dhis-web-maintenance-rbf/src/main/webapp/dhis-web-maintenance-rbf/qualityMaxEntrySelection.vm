@@ -1,0 +1,103 @@
+<script>
+    
+	jQuery(document).ready( function(){
+	countryTags = $levelOrgUnitIds;
+	datePicker( 'startDate');
+	datePicker( 'endDate');
+			
+	currentDiv = 'qualityMaxDataEntryForm';
+	
+    }); 
+    
+</script>
+<style >
+	#tariffSetting {
+   width: 280px;
+   height: 50px;
+   margin: 10px 10px 10px 10px;
+   float:right;
+   padding: 10px 10px 10px 10px ;
+   font: 1.6em bold;
+   background: #ccc;
+   box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);   
+   -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);
+   -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.5),
+   inset 8px 10px 10px rgba(255,255,255,0.75);
+   }
+</style>
+
+<h3>$i18n.getString( "quality_max_entry" )</h3>
+
+<form id="qualityMaxDataEntryForm" name="qualityMaxDataEntryForm" method="post" >	
+<div>
+	<input type="hidden" id='selectedOrgunitID' name = 'selectedOrgunitID' value="$!organisationUnit.uid" />
+	<input type="hidden" id='selectedOrgunitName' name = 'selectedOrgunitName' value="$!organisationUnit.name" />
+	
+</div>
+
+<div class="inputCriteria" style="width:700px;height:auto;">
+<table>
+	<tr>
+		<td><label for="orgUnitName">$i18n.getString( "organisation_unit" )</label></td>
+		<td><input type="text" id="orgUnitName" name = "orgUnitName" readonly="readonly" value="$!organisationUnit.name" style="width:352px"></td>
+	</tr>
+
+	<tr>
+		<td>Orgainsation Unit Group: </td>
+		<td> 
+		    <select id="orgUnitGroupId" name="orgUnitGroupId" onchange="javascript:orgUnitGroupChange()" style="width:352px">
+                <option value="-1">[Please select]</option>		    	
+                #foreach( $orgUnitGroup in $orgUnitGroups )
+                	<option value="$!orgUnitGroup.id">$!orgUnitGroup.name</option>
+                #end
+      		</select>      		
+      	</td>
+		<td >&nbsp;</td>
+	</tr>
+		
+	<tr>
+		<td><label>$i18n.getString( "dataset" )</label></td>
+		<td>
+			<select id="dataSetId" name = "dataSetId" style="width:354px" onchange="loadDataEntryForm()" #if( $dataSets.size() == 0 ) disabled="disabled" #end>
+				<option value="-1">$i18n.getString( "select_dataSet" )</option>
+				#foreach( $dataSet in $dataSets )
+					<option value="$dataSet.id">$dataSet.name</option>
+				#end
+			</select>
+			&nbsp;<a href="javascript:loadQualityMaxScore()">$i18n.getString( "quality_max_score" )&nbsp;</a>
+			
+		</td>		
+    </tr>
+	<tr>
+		<td><label>Start Date</label></td>
+		<td>
+			<input type="text" id="startDate" name="startDate" style="width:76%;" onchange="loadDataEntryForm()"/>
+		</td>
+    </tr>
+	<tr>
+		<td><label>End Date</label></td>
+		<td>
+			<input type="text" id="endDate" name="endDate" style="width:76%;" onchange="loadDataEntryForm()"/>
+		</td>
+    </tr>
+</table>
+</div>
+
+
+#parse( "/dhis-web-commons/loader/loader.vm" )
+<div id='dataEntryFormDiv'></div> <!-- DataEntry Form -->
+<div id='qualityMaxScoreDiv'></div> <!-- DataEntry Form --> 
+
+</form>
+
+<script type="text/javascript">
+
+var i18n_select_dataset = '$encoder.jsEscape( $i18n.getString( "select_dataSet" ) , "'")';
+
+
+jQuery( document ).ready( function()
+{
+});
+</script>

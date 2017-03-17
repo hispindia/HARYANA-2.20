@@ -1,0 +1,34 @@
+
+<a href="index.action"><h2>Data Integration</h2></a>
+<ul>
+    <li>Line Listing Data Import</li>
+    <ul>
+        #if( $auth.hasAccess( "dhis-web-excelimport", "lineListingExcelImportForm") )
+			<li><a href = "lineListingExcelImportForm.action">LineListing Data Import From</a></li>
+		#end
+    </ul>
+</ul>
+
+<br/>
+
+#parse( "/dhis-web-commons/ouwt/orgunittreesearch.vm" )
+
+<script type="text/javascript">
+
+    function orgUnitHasBeenSelected( orgUnitIds )
+    {
+        document.reportForm.ouIDTB.value = orgUnitIds;
+        
+        document.getElementById("ouNameTB").value = "";
+
+        reportListFileName = document.reportForm.reportListFileNameTB.value;
+
+        if( orgUnitIds != null && orgUnitIds != "" )
+        {
+            getLineListingImportSheet( orgUnitIds, reportListFileName )
+        }
+    }
+
+    selection.setListenerFunction( orgUnitHasBeenSelected );
+
+</script>

@@ -1,0 +1,74 @@
+<style>
+    #overlayPartner {
+    z-index:9998;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#000;
+    opacity:0.45;
+    -moz-opacity:0.45;
+    filter:alpha(opacity=45);
+    visibility:hidden;   
+    }
+    #overlayImgPartner{ width: 50px; height: 50px; z-index: 9999; position: absolute; left:50%}
+</style>
+<div id="overlayPartner">
+    <div id="overlayImgPartner"><img  width="50" height="50" src="images/ajax-loader.gif" style="margin:auto;position:fixed;top: 50%;left: 50%;"/></div>
+</div>
+
+
+
+<h3>$i18n.getString( "partner_management" )</h3>
+
+    <table>
+        <tr>
+            <td><label for="dataSetId">$i18n.getString( "dataSet" )</label></td>
+            <td><select id="dataSetId" name="dataSetId" style="width:220px" onchange="loadDataElementAndPeriod()" #if( $dataSets.size() == 0 ) disabled="disabled" #end >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $dataSet in $dataSets )
+                    <option value="$dataSet.id" text="$dataSet.name">$encoder.htmlEncode( $dataSet.name )</option>
+                #end
+            </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td><label for="partner">$i18n.getString( "partner" )</label></td>
+            <td><select id="optionSetId" name="optionSetId" style="width:220px" #if( $options.size() == 0 ) disabled="disabled" #end onchange="loadPartnerList();" >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $option in $options )
+                    <option value="$option.id" text="$option.name">$encoder.htmlEncode( $option.name )</option>
+                #end
+            </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td><label>$i18n.getString( "dataElement" )</label></td>
+            <td>
+                <select id="dataElementId" name = "dataElementId" style="width:220px"  onchange="loadPartnerList();" #if( $dataSets.size() == 0 || $options.size() == 0 ) disabled="disabled" #end >
+                    <option value="-1">[$i18n.getString( "select" )]</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+    <div style="width:100%">
+        <input type="button" value="Add New Period" style="float:right;" id="openPeriod" onclick="showAddParentForm();" />
+    </div>
+    <br/>
+
+#parse( "/dhis-web-commons/loader/loader.vm" )
+<div id='partnerListDiv'></div> <!-- Partner List -->
+<div id='addUpdatePartnerDiv'></div> <!-- Add/Update Partner  --> 
+ 
+<script type="text/javascript">
+
+var i18n_select_dataelement = '$encoder.jsEscape( $i18n.getString( "select_dataElement" ) , "'")';
+var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_partner" ) , "'" )';
+jQuery( document ).ready( function()
+{
+});
+</script>

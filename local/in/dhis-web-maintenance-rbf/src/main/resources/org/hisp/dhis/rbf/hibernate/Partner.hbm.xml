@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.hisp.dhis.rbf.api.Partner" table="partner">
+
+    <composite-id>      
+      <key-many-to-one name="organisationUnit" class="org.hisp.dhis.organisationunit.OrganisationUnit" column="organisationunitid" foreign-key="fk_partner_organisationunitid" />      
+      <key-many-to-one name="dataSet" class="org.hisp.dhis.dataset.DataSet" column="datasetid" foreign-key="fk_partner_datasetid" />
+      <key-many-to-one name="dataElement" class="org.hisp.dhis.dataelement.DataElement" column="dataelementid" foreign-key="fk_partner_dataelementid" />
+      <key-property name="startDate" column="startdate" />
+      <key-property name="endDate" column="enddate" />
+    </composite-id>
+    
+    <many-to-one name="option" class="org.hisp.dhis.option.Option" column="optionid" not-null="true" foreign-key="fk_partner_optionid" />  
+
+    <property name="storedBy" column="storedby" length="100" />
+
+    <property name="timestamp" column="lastupdated" type="timestamp" />
+
+  </class>
+</hibernate-mapping>

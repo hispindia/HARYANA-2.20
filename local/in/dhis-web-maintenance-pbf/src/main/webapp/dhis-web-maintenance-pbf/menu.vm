@@ -1,0 +1,31 @@
+
+<h2>$i18n.getString( "pbf_setup" )</h2>
+<ul>	
+	<li><a href="pbfDataEntry.action">$i18n.getString( "pbf_dataentry" )</a></li>
+
+    <li><a href="qualityScoreDataEntry.action">$i18n.getString( "quality_score_entry" )</a></li>
+	
+	<li><a href="qualityMaxDataEntry.action">$i18n.getString( "quality_max_entry" )</a></li>
+	
+	<li><a href="dataElementTariffManagement.action">$i18n.getString( "dataelement_tariff_target_management" )</a></li>
+	
+	<li><a href="bankDetailsManagement.action">$i18n.getString( "bank_details_management" )</a></li>	
+</ul>
+
+<h2>$i18n.getString( "aggregation_builder" )</h2>
+<ul>
+    <li><a href="aggregationQueryList.action">$i18n.getString( "aggregation_query_list" )</a></li>
+    <li><a href="runAggregationQueryForm.action">$i18n.getString( "manual_aggregation" )</a></li>
+</ul>
+<h2>$i18n.getString( "Lookup" )</h2>
+<ul>
+	<li><a href="getAllLookups.action">$i18n.getString( "Lookup" )</a></li>
+</ul>
+<h2>$i18n.getString( "payment_adjustment" )</h2>
+<ul>
+	<li><a href="getPaymentAdjustmentDetail.action">$i18n.getString( "payment_adjustment" )</a></li>
+</ul>
+<h2>$i18n.getString( "reports" )</h2>
+<ul>
+    <li><a href="PBFInvoiceReportForm.action">$i18n.getString( "quarterly_invoice_for_PBF_indicators_PMA" )</a></li>
+</ul>

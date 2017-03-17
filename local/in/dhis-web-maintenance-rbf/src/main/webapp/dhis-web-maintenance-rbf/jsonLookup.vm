@@ -1,0 +1,11 @@
+{ "lookup": 
+  {
+    "id": "$!{lookup.id}",
+    "name": "$!encoder.jsonEncode( ${lookup.name} )",
+    "code": "$!encoder.jsonEncode( ${lookup.code} )",
+    "description": "$!encoder.jsonEncode( ${lookup.description} )",
+	"type":"$!encoder.jsonEncode( ${lookup.type} )",
+	"value":"$!encoder.jsonEncode( ${lookup.value} )"
+    
+  }
+}

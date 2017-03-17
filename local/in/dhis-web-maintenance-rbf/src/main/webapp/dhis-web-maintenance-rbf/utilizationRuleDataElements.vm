@@ -1,0 +1,57 @@
+<style>
+    #overlayUtilization {
+    z-index:9998;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#000;
+    opacity:0.45;
+    -moz-opacity:0.45;
+    filter:alpha(opacity=45);
+    visibility:hidden;   
+    }
+    #overlayImgUtilization{ width: 50px; height: 50px; z-index: 9999; position: absolute; left:50%}
+</style>
+<div id="overlayUtilization">
+    <div id="overlayImgUtilization"><img  width="50" height="50" src="images/ajax-loader.gif" style="margin:auto;position:fixed;top: 50%;left: 50%;"/></div>
+</div>
+
+
+
+<h3>Utilization Rate Rules Management</h3>
+<!--<div class="inputCriteria" style="width:600px;height:45px;">-->
+	<table style="background-color:#D0EBD0;" width="100%">
+    	<tr>
+    		<td><label>$i18n.getString( "DataElement" )</label></td>
+    		<td>
+    			<select id="dataElementId" name = "dataElementId" style="width:200px" onchange="loadUtilizationRate();" #if( $dataElements.size() == 0 ) disabled="disabled" #end>
+    				<option value="-1">$i18n.getString( "select_dataElement" )</option>
+    				#foreach( $dataElement in $dataElements )
+    					<option value="$dataElement.id">$dataElement.name</option>
+    				#end
+    			</select>
+    		</td>
+        
+			<td valign='bottom' align='right'>
+				<input type="button" style='width:130px' value='$i18n.getString( "add" )'  #if( $dataElements.size() == 0 ) disabled="disabled" #end onclick="showAddUtilizationRateForm();">
+			</td>
+		</tr> 	
+	
+	</table>
+<!--</div>-->
+
+#parse( "/dhis-web-commons/loader/loader.vm" )
+<div id='utilizationRateListDiv'></div> <!-- Utilization Rate List -->  	
+<div id='addUpdateUtilizationRateDiv'></div> <!-- add update Utilization Rate/Rule --> 
+
+<script type="text/javascript">
+
+var i18n_select_dataelement = '$encoder.jsEscape( $i18n.getString( "select_dataElement" ) , "'")';
+var i18n_confirm_delete = '$encoder.jsEscape( $i18n.getString( "confirm_delete_utilization_rate_reule" ) , "'" )';
+
+jQuery( document ).ready( function()
+{
+});
+</script>

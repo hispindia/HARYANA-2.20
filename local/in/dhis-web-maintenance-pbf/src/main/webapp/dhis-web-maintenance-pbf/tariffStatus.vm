@@ -1,0 +1,6 @@
+{
+"message":"${message}"
+#if($maximumRange)
+	,"maximumRange":"${maximumRange}"
+#end
+}

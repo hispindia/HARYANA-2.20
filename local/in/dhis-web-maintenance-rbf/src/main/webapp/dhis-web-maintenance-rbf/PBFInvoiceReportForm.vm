@@ -1,0 +1,111 @@
+<script type="text/javascript">
+
+	function formValidations()
+	{
+	   	
+	    var startPeriodList = document.getElementById("selectedPeriodId");
+	    var startPeriodIndex = startPeriodList.selectedIndex;
+	    
+	    if( startPeriodList.options[startPeriodIndex].value == null || startPeriodList.options[startPeriodIndex].value== "-1" ) 
+		{ 
+			showWarningMessage( "Please Select Period" );
+			return false; 
+		}
+		
+		var reportFormatList = document.getElementById("selectedReportFormat");
+        var reportFormatIndex = reportFormatList.selectedIndex;
+        if( reportFormatList.options[reportFormatIndex].value == null || reportFormatList.options[reportFormatIndex].value== "-1" )
+        {
+        
+            showWarningMessage( "Please Select Report Format" );
+            return false; 
+        }
+		
+	    return true;
+	}
+
+    function redirectTorptDesign()
+    {
+
+	    var period = $('#selectedPeriodId').val();
+	    var year = period.substring(0,4);
+	    var quater = period.substring(4,6);
+    
+	    var reportFormat =  $('#selectedReportFormat').val();
+	    var orgunit = $('#treeSelectedId').val();
+
+        var startPeriod = "";
+        var endPeriod = "";
+	    if(quater=='Q1')
+	    {
+	        period = year+"-01-01";
+	        startPeriod = year+"-01-01";
+	        endPeriod = year+"-03-31";
+	    }
+	    else if(quater=='Q2')
+	    {
+	        period = year+"-04-01";
+            startPeriod = year+"-04-01";
+            endPeriod = year+"-06-30";	        
+	    }
+	    else if(quater=='Q3')
+	    {
+	        period = year+"-07-01";
+            startPeriod = year+"-07-01";
+            endPeriod = year+"-09-30";	        
+	    }
+	    else if(quater=='Q4')
+	    {
+	        period = year+"-10-01";
+            startPeriod = year+"-10-01";
+            endPeriod = year+"-12-31";	        
+	    }
+    
+	    window.location.href = "http://localhost:8090/birt/run?__report=C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/birt/report/PBF_Payment_Voucher.rptdesign&__format="+reportFormat+"&startDate="+startPeriod+"&endDate="+endPeriod+"&District="+orgunit;
+	    
+	    return false;
+    }
+
+</script>
+
+
+<h3>$i18n.getString( "quarterly_invoice_for_PBF_indicators_PMA" )</h3>
+
+<form id="generateReport"  method="Get" onsubmit="return formValidations()" >
+  
+	<table>
+		<tr>
+			<td><label for="selectedPeriodId">$i18n.getString( "period" )</label></td>
+			<td><select id="selectedPeriodId" name="selectedPeriodId" style="width:220px" >
+					<option value="-1">[$i18n.getString( "select" )]</option>
+						#foreach( $period in $periods )
+							<option value="$period.isoDate">$encoder.htmlEncode( $period.name )</option>
+						#end
+				</select>
+				<input type="button" id="prevButton"  style="width:75px" value="$i18n.getString( 'prev_year' )" title="$i18n.getString('earlier_periods')" onclick="getAvailablePeriodsTemp('$periodTypeName', 'selectedPeriodId', '-1' )" >
+				<input type="button" id="nextButton"  style="width:75px" value="$i18n.getString( 'next_year' )" title="$i18n.getString('later_periods')" onclick="getAvailablePeriodsTemp( '$periodTypeName', 'selectedPeriodId', '1' )" >
+			</td>
+            <td><select id="selectedReportFormat" name="selectedReportFormat" style="width:220px" >
+                    <option value="-1">[$i18n.getString( "select" )]</option>
+                    <option value="pdf">PDF</option>
+                    <option value="xls_spudsoft">XLS</option>       
+                </select>
+            </td>			
+		</tr>	
+	</table>
+	
+	  <table id="selectionTable">
+		<tr>
+		  <td>
+			#organisationUnitSelectionTree( false, false, false )
+		  </td>
+	    </tr>
+	    <tr>
+            <td>
+                <input type="submit" id="submitButton" value="$i18n.getString( 'generate' )" style="width:10em" onclick="return redirectTorptDesign()" />
+                <input type="text" id="birtpath" name="birtpath" value="$birtPath" />
+            </td>
+	    </tr>
+	  </table>
+
+</form>

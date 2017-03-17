@@ -1,0 +1,65 @@
+
+<script type="text/javascript">
+
+function formValidations()
+{
+   	//alert("validation");
+	
+    var startPeriodList = document.getElementById("selectedPeriodId");
+    var startPeriodIndex = startPeriodList.selectedIndex;
+    
+    if( startPeriodList.options[startPeriodIndex].value == null || startPeriodList.options[startPeriodIndex].value== "-1" ) 
+	{ 
+		showWarningMessage( "Please Select Period" );
+		//alert("Please Select Period"); 
+		return false; 
+	}
+	
+    return true;
+}
+
+</script>
+
+
+<h3>$i18n.getString( "manual_aggregation" )</h3>
+
+<form id="runAggregationQueryForm" action="runAggregationQuery.action" method="post" onsubmit="return formValidations()" >
+  
+<table>
+	<tr>
+		<td><label for="selectedPeriodId">$i18n.getString( "period" )</label></td>
+		<td><select id="selectedPeriodId" name="selectedPeriodId" style="width:220px" >
+				<option value="-1">[$i18n.getString( "select" )]</option>
+					#foreach( $period in $periods )
+						<option value="$period.isoDate">$encoder.htmlEncode( $period.name )</option>
+					#end
+			</select>
+			<input type="button" id="prevButton"  style="width:75px" value="$i18n.getString( 'prev_year' )" title="$i18n.getString('earlier_periods')" onclick="getAvailablePeriodsTemp( 'selectedPeriodId', 'selectedPeriodId', '-1' )" >
+			<input type="button" id="nextButton"  style="width:75px" value="$i18n.getString( 'next_year' )" title="$i18n.getString('later_periods')" onclick="getAvailablePeriodsTemp( 'selectedPeriodId', 'selectedPeriodId', '1' )" >
+		</td>
+	</tr>	
+</table>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+  <table id="selectionTable">
+	<tr>
+	  <td>
+		#organisationUnitSelectionTree( false, true, false )
+	  </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="submit" id="submitButton" value="$i18n.getString( 'aggregate_values' )" style="width:10em"/>
+	  </td>
+    </tr>
+  </table>
+
+</form>

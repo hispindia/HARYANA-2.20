@@ -1,0 +1,136 @@
+<script type="text/javascript">
+
+
+    window.onload=function(){
+        jQuery('#addNewPeriod').dialog({autoOpen: false});
+    }
+
+ function showAddParentForm()
+    {
+      //  jQuery('#addNewPeriod').dialog('destroy').remove();
+
+		var dataSetId = $( "#dataSetId" ).val();
+       	var optionSetId = $( "#optionSetId" ).val();
+ 		var dataElementId = $( "#dataElementId" ).val();
+
+		if ( dataSetId == "-1" )
+        {
+            showWarningMessage( "Please Select DataSet" );
+
+            return false;
+        }
+
+        else if( optionSetId == "-1" )
+        {
+            showWarningMessage( "Please Select Partner" );
+            return false;
+        }
+
+        else if( dataElementId == "-1" )
+        {
+            showWarningMessage( "Please Select DataElement" );
+            return false;
+        }
+		else
+		{ 		
+        jQuery('<div id="addNewPeriod">' ).load( 'partnerForm.action?dataSetId='+ dataSetId + "&optionSetId=" + optionSetId + "&dataElementId=" + dataElementId).dialog({
+            title: 'Add New Period',
+            maximize: true,
+            closable: true,
+            modal:true,
+            overlay:{background:'#000000', opacity:0.1},
+            width: 600,
+            height: 500
+        });
+	}
+        
+ }
+
+    function showParentList(){
+        jQuery('#showList' ).load( 'partnerDataList.action?dataSetId='+ dataSetId + "&optionSetId=" + optionSetId + "&dataElementId=" + dataElementId).dialog({
+            title: 'Add New Period',
+            maximize: true,
+            closable: true,
+            modal:true,
+            overlay:{background:'#000000', opacity:0.1},
+            width: 600,
+            height: 500
+        });
+    }
+
+</script>
+
+
+<h3>$i18n.getString( "partner_management" )</h3>
+
+<form id="partnerFundForm" name="partnerFundForm" action="partnerFormResult.action" method="post" onsubmit="return formValidations()" >
+
+    <table>
+        <tr>
+            <td><label for="dataSetId">$i18n.getString( "dataSet" )</label></td>
+            <td><select id="dataSetId" name="dataSetId" style="width:220px" onchange="loadDataElementAndPeriod()" >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $dataSet in $dataSets )
+                    <option value="$dataSet.id" text="$dataSet.name">$encoder.htmlEncode( $dataSet.name )</option>
+                #end
+            </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td><label for="partner">$i18n.getString( "partner" )</label></td>
+            <td><select id="optionSetId" name="optionSetId" style="width:220px" >
+                <option value="-1">[$i18n.getString( "select" )]</option>
+                #foreach( $option in $options )
+                    <option value="$option.id" text="$option.name">$encoder.htmlEncode( $option.name )</option>
+                #end
+            </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td><label>$i18n.getString( "dataElement" )</label></td>
+            <td>
+                <select id="dataElementId" name = "dataElementId" style="width:220px" >
+                    <option value="-1">[$i18n.getString( "select" )]</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+    <div style="width:100%">
+        <input type="button" value="Add New Period" style="float:right;" id="openPeriod" onclick="showAddParentForm();" />
+    </div>
+    <br/><br/>
+
+
+
+    <div id="showList"></div>
+
+  <!--  <div style="width:100%;" id="periodTable">
+
+       <table id="periodDetails" name="periodDetails" class="mainPageTable">
+            <thead >
+            <tr >
+                <th >Start Date</th>
+                <th >End Date</th>
+                <th ># of Facilities</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+     <div style="width:100%">
+        <input type="submit" value="Save" style="float:right;" id="save" />
+        <input type="button" value="Cancel" style="float:right;" id="cancel" />
+    </div> -->
+
+    </form>

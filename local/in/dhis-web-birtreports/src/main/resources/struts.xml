@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    
+    <!-- use the DHIS web portal default -->
+    <include file="dhis-web-commons.xml"/>
+
+    <package name="dhis-web-birtreports" extends="dhis-web-commons" namespace="/dhis-web-birtreports">
+        
+        <action name="index"
+            class="org.hisp.dhis.birtreports.action.ReportsHomePageAction">
+            <result name="success" type="velocity">/main.vm</result>
+            <param name="page">/dhis-web-birtreports/selectReport.vm</param>
+            <param name="menu">/dhis-web-birtreports/menuWithTree.vm</param>
+            <param name="javascripts">../dhis-web-commons/ouwt/ouwt.js</param>
+            <interceptor-ref name="organisationUnitTreeStack"/>
+        </action>
+		
+    </package>
+</struts>

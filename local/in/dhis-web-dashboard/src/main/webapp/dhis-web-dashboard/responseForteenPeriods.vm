@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forteenPeriodList>
+#foreach( $forteenPeriodName in $forteenPeriodList )
+    <forteenPeriod>
+        <name>$forteenPeriodName</name>
+    </forteenPeriod>
+#end
+</forteenPeriodList>
