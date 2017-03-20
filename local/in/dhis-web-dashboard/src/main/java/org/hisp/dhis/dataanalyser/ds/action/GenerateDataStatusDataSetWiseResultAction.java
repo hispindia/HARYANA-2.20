@@ -106,19 +106,58 @@ public class GenerateDataStatusDataSetWiseResultAction implements Action
         this.periodTypeId = periodTypeId;
     }
     
+    /*
     private int sDateLB;
-    
+
     public void setSDateLB( int dateLB )
     {
         sDateLB = dateLB;
     }
+
+    public int getSDateLB()
+    {
+        return sDateLB;
+    }
+    */
     
+    private String sDateLB;
+    
+    
+    public String getsDateLB()
+    {
+        return sDateLB;
+    }
+
+    public void setsDateLB( String sDateLB )
+    {
+        this.sDateLB = sDateLB;
+    }
+
+    /*
     private int eDateLB;
-    
+
     public void setEDateLB( int dateLB )
     {
         eDateLB = dateLB;
     }
+
+    public int getEDateLB()
+    {
+        return eDateLB;
+    }
+*/
+    private String eDateLB;
+    
+    public String geteDateLB()
+    {
+        return eDateLB;
+    }
+
+    public void seteDateLB( String eDateLB )
+    {
+        this.eDateLB = eDateLB;
+    }
+
     
     private String facilityLB;
 
@@ -325,8 +364,11 @@ public class GenerateDataStatusDataSetWiseResultAction implements Action
         // Period Related Info
         PeriodType periodType = periodService.getPeriodTypeByName( periodTypeId );
         
-        Period startPeriod = periodService.getPeriod( sDateLB );
-        Period endPeriod = periodService.getPeriod( eDateLB );
+        //Period startPeriod = periodService.getPeriod( sDateLB );
+        //Period endPeriod = periodService.getPeriod( eDateLB );
+        Period startPeriod = periodService.getPeriod( Integer.parseInt( sDateLB ) );
+        Period endPeriod = periodService.getPeriod( Integer.parseInt( eDateLB ));
+        
         periodList = new ArrayList<Period>( periodService.getPeriodsBetweenDates( periodType, startPeriod.getStartDate(), endPeriod.getEndDate() ));
         
         periodNameList = dashBoardService.getPeriodNamesByPeriodType( periodType, periodList );
