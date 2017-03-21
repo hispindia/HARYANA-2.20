@@ -60,16 +60,16 @@ import com.opensymphony.xwork2.Action;
 
 /**
  * @author brajesh murari
- *
+ * 
  */
 
 public class GenerateLastUpdatedDataSetResultAction
-implements Action
+    implements Action
 {
     // ---------------------------------------------------------------
     // Dependencies
     // ---------------------------------------------------------------
-    
+
     private JdbcTemplate jdbcTemplate;
 
     public void setJdbcTemplate( JdbcTemplate jdbcTemplate )
@@ -91,14 +91,13 @@ implements Action
     {
         this.organisationUnitService = organisationUnitService;
     }
-/*    
-    private DataValueService dataValueService;
 
-    public void setDataValueService( DataValueService dataValueService )
-    {
-        this.dataValueService = dataValueService;
-    }
-*/
+    /*
+     * private DataValueService dataValueService;
+     * 
+     * public void setDataValueService( DataValueService dataValueService ) {
+     * this.dataValueService = dataValueService; }
+     */
     public OrganisationUnitService getOrganisationUnitService()
     {
         return organisationUnitService;
@@ -129,37 +128,35 @@ implements Action
     {
         this.dashBoardService = dashBoardService;
     }
-    /*
-    private DisplayPropertyHandler displayPropertyHandler;
 
-    public void setDisplayPropertyHandler( DisplayPropertyHandler displayPropertyHandler )
-    {
-        this.displayPropertyHandler = displayPropertyHandler;
-    }
-    */
+    /*
+     * private DisplayPropertyHandler displayPropertyHandler;
+     * 
+     * public void setDisplayPropertyHandler( DisplayPropertyHandler
+     * displayPropertyHandler ) { this.displayPropertyHandler =
+     * displayPropertyHandler; }
+     */
     private UserService userService;
-    
+
     public void setUserService( UserService userService )
     {
         this.userService = userService;
     }
 
     /*
-    private UserStore userStore;
-    
-    public void setUserStore( UserStore userStore )
-    {
-        this.userStore = userStore;
-    }
-    */  
-    @SuppressWarnings("unused")
+     * private UserStore userStore;
+     * 
+     * public void setUserStore( UserStore userStore ) { this.userStore =
+     * userStore; }
+     */
+    @SuppressWarnings( "unused" )
     private Comparator<OrganisationUnit> orgUnitComparator;
 
     public void setOrgUnitComparator( Comparator<OrganisationUnit> orgUnitComparator )
     {
         this.orgUnitComparator = orgUnitComparator;
     }
-    
+
     // ---------------------------------------------------------------
     // Output Parameters
     // ---------------------------------------------------------------
@@ -244,19 +241,15 @@ implements Action
     {
         this.dsId = dsId;
     }
-    /*
-    private String includeZeros;
 
-    public void setIncludeZeros( String includeZeros )
-    {
-        this.includeZeros = includeZeros;
-    }
-    
-    public String getIncludeZeros()
-    {
-        return includeZeros;
-    }
-    */
+    /*
+     * private String includeZeros;
+     * 
+     * public void setIncludeZeros( String includeZeros ) { this.includeZeros =
+     * includeZeros; }
+     * 
+     * public String getIncludeZeros() { return includeZeros; }
+     */
     private String selectedButton;
 
     public void setselectedButton( String selectedButton )
@@ -283,28 +276,42 @@ implements Action
         this.immChildOption = immChildOption;
     }
 
-    private int sDateLB;
+    /*
+     * private int sDateLB;
+     * 
+     * public void setSDateLB( int dateLB ) { sDateLB = dateLB; }
+     * 
+     * public int getSDateLB() { return sDateLB; }
+     * 
+     * private int eDateLB;
+     * 
+     * public void setEDateLB( int dateLB ) { eDateLB = dateLB; }
+     * 
+     * public int getEDateLB() { return eDateLB; }
+     */
 
-    public void setSDateLB( int dateLB )
-    {
-        sDateLB = dateLB;
-    }
+    private String sDateLB;
 
-    public int getSDateLB()
+    public String getsDateLB()
     {
         return sDateLB;
     }
 
-    private int eDateLB;
-
-    public void setEDateLB( int dateLB )
+    public void setsDateLB( String sDateLB )
     {
-        eDateLB = dateLB;
+        this.sDateLB = sDateLB;
     }
 
-    public int getEDateLB()
+    private String eDateLB;
+
+    public String geteDateLB()
     {
         return eDateLB;
+    }
+
+    public void seteDateLB( String eDateLB )
+    {
+        this.eDateLB = eDateLB;
     }
 
     private String facilityLB;
@@ -369,18 +376,18 @@ implements Action
 
     int orgUnitCount;
 
-    //private String dataViewName;
+    // private String dataViewName;
 
     // ---------------------------------------------------------------
     // Action Implementation
     // ---------------------------------------------------------------
-   // @SuppressWarnings( { "deprecation", "unchecked" } )
+    // @SuppressWarnings( { "deprecation", "unchecked" } )
     public String execute()
         throws Exception
     {
-        
+
         orgUnitCount = 0;
-        //dataViewName = "";
+        // dataViewName = "";
 
         // Intialization
         periodNameList = new ArrayList<String>();
@@ -389,11 +396,9 @@ implements Action
         maxOULevel = 1;
         minOULevel = organisationUnitService.getNumberOfOrganisationalLevels();
         /*
-        if( includeZeros.equalsIgnoreCase( "false" ))
-        {
-            includeZeros = null;
-        }
-        */
+         * if( includeZeros.equalsIgnoreCase( "false" )) { includeZeros = null;
+         * }
+         */
         if ( immChildOption != null && immChildOption.equalsIgnoreCase( "yes" ) )
         {
             orgUnitListCB = new ArrayList<String>();
@@ -415,7 +420,7 @@ implements Action
         }
         else
         {
-            //System.out.println( "slectedDataSets is not empty" );
+            // System.out.println( "slectedDataSets is not empty" );
         }
         for ( String ds : selectedDataSets )
         {
@@ -431,7 +436,7 @@ implements Action
         if ( facilityLB.equals( "children" ) )
         {
             selectedOrgUnit = organisationUnitService.getOrganisationUnit( Integer.parseInt( orgUnitListCB.get( 0 ) ) );
-            orgUnitList = getChildOrgUnitTree( selectedOrgUnit );                     
+            orgUnitList = getChildOrgUnitTree( selectedOrgUnit );
         }
         else if ( facilityLB.equals( "immChildren" ) )
         {
@@ -450,7 +455,7 @@ implements Action
                 orgUnitList.add( o );
                 List<OrganisationUnit> organisationUnits = new ArrayList<OrganisationUnit>( o.getChildren() );
                 Collections.sort( organisationUnits, new IdentifiableObjectNameComparator() );
-                orgUnitList.addAll( organisationUnits );              
+                orgUnitList.addAll( organisationUnits );
             }
         }
         else
@@ -460,9 +465,9 @@ implements Action
             while ( orgUnitIterator.hasNext() )
             {
                 o = organisationUnitService.getOrganisationUnit( Integer.parseInt( orgUnitIterator.next() ) );
-                orgUnitList.add( o );                
-                Collections.sort( orgUnitList, new IdentifiableObjectNameComparator() );               
-                //displayPropertyHandler.handle( orgUnitList );
+                orgUnitList.add( o );
+                Collections.sort( orgUnitList, new IdentifiableObjectNameComparator() );
+                // displayPropertyHandler.handle( orgUnitList );
             }
         }
 
@@ -493,22 +498,25 @@ implements Action
                 orgUnitInfo += "," + ou.getId();
             }
         }
-       
-        // Period Related Info
-        Period startPeriod = periodService.getPeriod( sDateLB );
-        Period endPeriod = periodService.getPeriod( eDateLB );
 
-        PeriodType dataSetPeriodType = selDataSet.getPeriodType();        
+        // Period Related Info
+      //  Period startPeriod = periodService.getPeriod( sDateLB );
+      //  Period endPeriod = periodService.getPeriod( eDateLB );
+
+        Period startPeriod = periodService.getPeriod( Integer.parseInt( sDateLB ) );
+        Period endPeriod = periodService.getPeriod( Integer.parseInt( eDateLB ));
+        
+        PeriodType dataSetPeriodType = selDataSet.getPeriodType();
         periodList = periodService.getPeriodsBetweenDates( dataSetPeriodType, startPeriod.getStartDate(),
             endPeriod.getEndDate() );
 
         periodInfo = "-1";
         for ( Period p : periodList )
             periodInfo += "," + p.getId();
-           
+
         Collection<DataElement> dataElements = new ArrayList<DataElement>();
         dataElements = selDataSet.getDataElements();
-        
+
         int dataSetMemberCount1 = 0;
         for ( DataElement de1 : dataElements )
         {
@@ -522,7 +530,7 @@ implements Action
         Set<OrganisationUnit> dso = new HashSet<OrganisationUnit>();
         Iterator<Period> periodIterator;
         dso = selDataSet.getSources();
-        
+
         while ( orgUnitListIterator.hasNext() )
         {
             o = orgUnitListIterator.next();
@@ -540,7 +548,7 @@ implements Action
 
             String storedby = null;
             String ipAddress = null;
-           // String userDetailInfo = null;
+            // String userDetailInfo = null;
             List<String> dsResults = new ArrayList<String>();
             while ( periodIterator.hasNext() )
             {
@@ -549,93 +557,98 @@ implements Action
 
                 if ( dso == null )
                 {
-                    dsResults.add( -1, dsId);
+                    dsResults.add( -1, dsId );
                     continue;
                 }
                 else if ( !dso.contains( o ) )
                 {
                     orgUnitInfo = "-1";
-       
+
                     dsResults.add( " " );
                     continue;
                 }
 
                 orgUnitInfo = "" + o.getId();
 
-                SqlRowSet sqlResultSet = jdbcTemplate.queryForRowSet( "SELECT DISTINCT(storedby) FROM datavalue WHERE dataelementid IN (" + deInfo
-                    + ") AND sourceid IN (" + orgUnitInfo + ") AND periodid IN (" + periodInfo + ")" );
+                SqlRowSet sqlResultSet = jdbcTemplate
+                    .queryForRowSet( "SELECT DISTINCT(storedby) FROM datavalue WHERE dataelementid IN (" + deInfo
+                        + ") AND sourceid IN (" + orgUnitInfo + ") AND periodid IN (" + periodInfo + ")" );
 
                 storedby = " ";
                 ipAddress = " ";
                 while ( sqlResultSet.next() )
-                {                   
-                    
+                {
+
                     try
                     {
                         String tempUserName = sqlResultSet.getString( 1 );
-                        
-                        if( tempUserName != null)
-                        {   UserCredentials userCredentials  =  userService.getUserCredentialsByUsername( tempUserName );
-                        
-                        
-                            //UserCredentials userCredentials = userStore.getUserCredentialsByUsername( tempUserName );
-                            //User user = userStore.getByName( tempUserName );
-                            if( userCredentials != null )
+
+                        if ( tempUserName != null )
+                        {
+                            UserCredentials userCredentials = userService.getUserCredentialsByUsername( tempUserName );
+
+                            // UserCredentials userCredentials =
+                            // userStore.getUserCredentialsByUsername(
+                            // tempUserName );
+                            // User user = userStore.getByName( tempUserName );
+                            if ( userCredentials != null )
                             {
                                 User user = userService.getUser( userCredentials.getId() );
-                                //User user = userStore.getUser( userCredentials.getId() );
-                                
-                                /* for Haryana
-                                if( userCredentials.getLastLoginIpAddress() != null )
+                                // User user = userStore.getUser(
+                                // userCredentials.getId() );
+
+                                /*
+                                 * for Haryana if(
+                                 * userCredentials.getLastLoginIpAddress() !=
+                                 * null ) { ipAddress =
+                                 * userCredentials.getLastLoginIpAddress(); }
+                                 */
+
+                                if ( user != null )
                                 {
-                                    ipAddress = userCredentials.getLastLoginIpAddress();
+                                    storedby += user.getFirstName() + " " + user.getSurname() + " , ";
                                 }
-                                */
-                                
-                                if( user != null )
-                                {
-                                    storedby += user.getFirstName() + " "+ user.getSurname() + " , ";
-                                }
-                                
+
                                 else
                                 {
-                                    storedby +=  tempUserName + " , ";
+                                    storedby += tempUserName + " , ";
                                 }
                             }
                             else
                             {
-                                storedby +=  tempUserName + " , ";
+                                storedby += tempUserName + " , ";
                             }
                         }
                         else
                         {
                             storedby = " ";
                         }
-                                               
+
                     }
                     catch ( Exception e )
                     {
                         storedby = "not known";
                     }
-                } 
-                
-                if( storedby.trim().equals( "" ) )
-                {                   
+                }
+
+                if ( storedby.trim().equals( "" ) )
+                {
                 }
                 else
                 {
-                    storedby = storedby.substring( 0, storedby.length()-2 );
+                    storedby = storedby.substring( 0, storedby.length() - 2 );
                 }
-                
-                SqlRowSet sqlResultSet1 = jdbcTemplate.queryForRowSet( "SELECT DISTINCT(lastupdated) FROM datavalue WHERE dataelementid IN (" + deInfo
-                    + ") AND sourceid IN (" + orgUnitInfo + ") AND periodid IN (" + periodInfo + ")" );
+
+                SqlRowSet sqlResultSet1 = jdbcTemplate
+                    .queryForRowSet( "SELECT DISTINCT(lastupdated) FROM datavalue WHERE dataelementid IN (" + deInfo
+                        + ") AND sourceid IN (" + orgUnitInfo + ") AND periodid IN (" + periodInfo + ")" );
 
                 String lastupdated = " ";
                 while ( sqlResultSet1.next() )
-                {                   
+                {
                     try
                     {
-                        if( lastupdated.compareTo( sqlResultSet1.getString( 1 ) ) < 0 )
+                        if ( lastupdated.compareTo( sqlResultSet1.getString( 1 ) ) < 0 )
                             lastupdated = sqlResultSet1.getString( 1 );
                     }
                     catch ( Exception e )
@@ -643,14 +656,14 @@ implements Action
                         lastupdated = "Not Known";
                     }
                 }
-                
-                if( storedby.trim().equals( "" ) && lastupdated.trim().equals( "" ) )
+
+                if ( storedby.trim().equals( "" ) && lastupdated.trim().equals( "" ) )
                 {
                     dsResults.add( " " );
                 }
                 else
                 {
-                    dsResults.add( storedby + " : " + ipAddress +  " : " + lastupdated );
+                    dsResults.add( storedby + " : " + ipAddress + " : " + lastupdated );
                 }
             }
 
@@ -664,7 +677,8 @@ implements Action
             ouLevelNames[i] = "Level" + i;
         }
 
-        List<OrganisationUnitLevel> ouLevels = new ArrayList<OrganisationUnitLevel>( organisationUnitService.getFilledOrganisationUnitLevels() );
+        List<OrganisationUnitLevel> ouLevels = new ArrayList<OrganisationUnitLevel>(
+            organisationUnitService.getFilledOrganisationUnitLevels() );
         for ( OrganisationUnitLevel ouL : ouLevels )
         {
             ouLevelNames[ouL.getLevel()] = ouL.getName();
@@ -686,7 +700,7 @@ implements Action
         {
             try
             {
-                //deleteDataView( dataViewName );               
+                // deleteDataView( dataViewName );
             }
             catch ( Exception e )
             {
@@ -695,7 +709,7 @@ implements Action
         }// finally block end
 
         periodNameList = dashBoardService.getPeriodNamesByPeriodType( dataSetPeriodType, periodList );
-        
+
         return SUCCESS;
     }
 
@@ -716,15 +730,14 @@ implements Action
         }
     }
 
-    
     public void deleteDataView( String dataViewName )
     {
         String query = "DROP VIEW IF EXISTS " + dataViewName;
 
         try
-        {           
-            @SuppressWarnings("unused")
-                        int sqlResult = jdbcTemplate.update( query );
+        {
+            @SuppressWarnings( "unused" )
+            int sqlResult = jdbcTemplate.update( query );
             System.out.println( "View " + dataViewName + " dropped Successfully" );
         } // try block end
         catch ( Exception e )
